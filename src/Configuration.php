@@ -15,10 +15,13 @@ use Monolog\Registry;
 
 class Configuration
 {
+
     protected bool $ForceRefreshToken = false;
     protected string $accessToken = '';
     protected string $Client_id = '';
     protected string $Client_secret = '';
+    protected string $refresh_token = '';
+    protected string $AppID = '';
     protected string $BaseUrl = 'https://apps.fortnox.se';
     protected string $userAgent = 'DeployHuman/fortnox-PHP-Client/1.0.0';
     protected string $tempFolderPath;
@@ -45,6 +48,7 @@ class Configuration
             $logger->pushHandler(new StreamHandler($this->getLogPath() . '/api.log', Logger::DEBUG));
             $logger->pushHandler(new FirePHPHandler());
         }
+        $this->logstack = $logger;
         Registry::addLogger($logger, __CLASS__, true);
         ErrorHandler::register($logger);
     }
@@ -52,6 +56,7 @@ class Configuration
 
     public function getLogger(): Logger
     {
+        if (!isset($this->logstack)) $this->setGlobalLogger();
         return $this->logstack;
     }
 
@@ -62,11 +67,7 @@ class Configuration
         return $this;
     }
 
-    public function setConnectDirectly(bool $ConnectDirectly): self
-    {
-        $this->ConnectDirectly = $ConnectDirectly;
-        return $this;
-    }
+
 
     public function getDebugHandler(): HandlerStack
     {
@@ -86,41 +87,22 @@ class Configuration
         return $this;
     }
 
-    public function getLogPath(): bool
+    public function getLogPath(): string
     {
         return $this->logpath;
     }
 
+    public function setConnectDirectly(bool $ConnectDirectly): self
+    {
+        $this->ConnectDirectly = $ConnectDirectly;
+        return $this;
+    }
 
     public function getConnectDirectly(): bool
     {
         return $this->ConnectDirectly;
     }
 
-    public function setClient_id(string $Client_id): self
-    {
-        $this->Client_id = $Client_id;
-        return $this;
-    }
-
-    public function getClient_id(): string
-    {
-        return $this->Client_id;
-    }
-
-    public function setApiVersion(string $apiVersion): self
-    {
-        $this->apiVersion = $apiVersion;
-        return $this;
-    }
-
-    public function getAPIversion(): string
-    {
-        if (!isset($this->apiVersion)) {
-            return 'v2';
-        }
-        return $this->apiVersion;
-    }
 
     public function setClient_secret(string $Client_secret): self
     {
@@ -177,6 +159,58 @@ class Configuration
         return $this;
     }
 
+    /**
+     * Important, this is predefined values you get from Fortnox directly, and is the Sites login, to request login for the user that you serve.
+     * Not to be confused with the Client_id, which is the login you use to connect to the API, named AppID here in this SDK.
+     * 
+     * @param string $Client_id
+     * @return self
+     */
+    public function setClient_id(string $Client_id): self
+    {
+        $this->Client_id = $Client_id ?? '';
+        return $this;
+    }
+
+    public function getClient_id(): string
+    {
+        return $this->Client_id;
+    }
+
+    /**
+     * As this token lasts 31 days you should have saved it from Fortnox, and then set in here next time you use the SDK.
+     *
+     * @param string $refresh_token
+     * @return self
+     */
+    public function setRefresh_token(string $refresh_token): self
+    {
+        $this->refresh_token = $refresh_token ?? '';
+        return $this;
+    }
+
+    public function getRefresh_token(): string
+    {
+        return $this->refresh_token;
+    }
+
+    /**
+     * Which is documented as "client_id" in the Fortnox API documentation but there is two different, and this one is for which public app you are connecting to.
+     *
+     * @param string $AppID
+     * @return self
+     */
+    public function setAppID(string $AppID): self
+    {
+        $this->AppID = $AppID ?? '';
+        return $this;
+    }
+
+    public function getAppID(): string
+    {
+        return $this->AppID;
+    }
+
     public function setStorageName(string $ArrayName = null): self
     {
         $this->storage_name = $ArrayName ?? $this->storage_Default_name;
@@ -226,7 +260,7 @@ class Configuration
             }
         }
         if (session_status() !== PHP_SESSION_ACTIVE && !$this->isDebug()) {
-            throw new Exception('Invalid AUTH storage. Use session_start() before instantiating Kivra');
+            throw new Exception('Invalid AUTH storage. Use session_start() before instantiating Fortnox');
         }
         if ($this->storage_name == null) $this->storage_name = clone $this->storage_Default_name;
         $this->storage[$this->storage_name] = [];
