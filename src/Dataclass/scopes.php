@@ -4,27 +4,27 @@ namespace DeployHuman\fortnox\Dataclass;
 
 class scopes
 {
-    protected bool $salary_scope = true;
-    protected bool $bookkeeping_scope = true;
-    protected bool $archive_scope = true;
-    protected bool $connectfile_scope = true;
-    protected bool $article_scope = true;
-    protected bool $companyinformation_scope = true;
-    protected bool $settings_scope = true;
-    protected bool $invoice_scope = true;
-    protected bool $costcenter_scope = true;
-    protected bool $currency_scope = true;
-    protected bool $customer_scope = true;
-    protected bool $inbox_scope = true;
-    protected bool $payment_scope = true;
-    protected bool $offer_scope = true;
-    protected bool $order_scope = true;
-    protected bool $price_scope = true;
-    protected bool $print_scope = true;
-    protected bool $project_scope = true;
-    protected bool $profile_scope = true;
-    protected bool $supplierinvoice_scope = true;
-    protected bool $supplier_scope = true;
+    protected bool $salary_scope = false;
+    protected bool $bookkeeping_scope = false;
+    protected bool $archive_scope = false;
+    protected bool $connectfile_scope = false;
+    protected bool $article_scope = false;
+    protected bool $companyinformation_scope = false;
+    protected bool $settings_scope = false;
+    protected bool $invoice_scope = false;
+    protected bool $costcenter_scope = false;
+    protected bool $currency_scope = false;
+    protected bool $customer_scope = false;
+    protected bool $inbox_scope = false;
+    protected bool $payment_scope = false;
+    protected bool $offer_scope = false;
+    protected bool $order_scope = false;
+    protected bool $price_scope = false;
+    protected bool $print_scope = false;
+    protected bool $project_scope = false;
+    protected bool $profile_scope = false;
+    protected bool $supplierinvoice_scope = false;
+    protected bool $supplier_scope = false;
 
 
     public function __construct()
@@ -49,17 +49,13 @@ class scopes
      */
     public function setScope(string $scopename, bool $scopestatus = true): self
     {
-        if (isset(${$scopename . "_scope"})) {
-            $this->{$scopename . "_scope"} = $scopestatus;
-        }
+        $this->{$scopename . "_scope"} = $scopestatus;
         return $this;
     }
 
     public function getScope(string $scopename): bool
     {
-        if (isset(${$scopename . "_scope"})) {
-            return ($this->{$scopename . "_scope"} == true);
-        }
+        return ($this->{$scopename . "_scope"} == true);
         return false;
     }
 
