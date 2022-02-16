@@ -15,12 +15,8 @@ use Monolog\Registry;
 
 class Configuration
 {
-
-    protected bool $ForceRefreshToken = false;
-    protected string $accessToken = '';
     protected string $Client_id = '';
     protected string $Client_secret = '';
-    protected string $refresh_token = '';
     protected string $AppID = '';
     protected string $BaseUrl = 'https://apps.fortnox.se';
     protected string $userAgent = 'DeployHuman/fortnox-PHP-Client/1.0.0';
@@ -30,15 +26,13 @@ class Configuration
     protected array $storage;
     protected bool $debug = false;
     protected logger $logstack;
-    protected bool $ConnectDirectly = true;
     protected string $logpath = __DIR__ . './log/';
     protected bool $Storage_Is_Session = false;
 
-    public function __construct(bool $StorageInSession = true, bool $ConnectDirectly = true)
+    public function __construct(bool $StorageInSession = true)
     {
         $this->setStorageIsSession($StorageInSession);
         $this->tempFolderPath = sys_get_temp_dir();
-        $this->ConnectDirectly = $ConnectDirectly;
     }
 
     private function setGlobalLogger(Logger $logger = null)
@@ -92,18 +86,6 @@ class Configuration
         return $this->logpath;
     }
 
-    public function setConnectDirectly(bool $ConnectDirectly): self
-    {
-        $this->ConnectDirectly = $ConnectDirectly;
-        return $this;
-    }
-
-    public function getConnectDirectly(): bool
-    {
-        return $this->ConnectDirectly;
-    }
-
-
     public function setClient_secret(string $Client_secret): self
     {
         $this->Client_secret = $Client_secret;
@@ -123,7 +105,7 @@ class Configuration
 
     public function getBaseUrl(): string
     {
-        return $this->BaseUrl;
+        return $this->BaseUrl ?? '';
     }
 
     public function setUserAgent(string $userAgent): self
@@ -148,16 +130,6 @@ class Configuration
         return $this->debug ?? false;
     }
 
-    public function getForceRefreshToken(): bool
-    {
-        return $this->ForceRefreshToken;
-    }
-
-    public function setForceRefreshToken(bool $ForceRefreshToken): self
-    {
-        $this->ForceRefreshToken = $ForceRefreshToken ?? false;
-        return $this;
-    }
 
     /**
      * Important, this is predefined values you get from Fortnox directly, and is the Sites login, to request login for the user that you serve.
@@ -258,7 +230,7 @@ class Configuration
             return $_SESSION[$this->storage_name] ?? [];
         }
 
-        return $this->storage[$this->storage_name];
+        return $this->storage[$this->storage_name] ?? [];
     }
 
     public function getStorageIsSession(): bool
@@ -299,7 +271,8 @@ class Configuration
 
     public function isClientAuthSet(): bool
     {
-        if (empty($this->Client_id) || empty($this->Client_secret) || empty($this->BaseUrl) || empty($this->AppID) || empty($this->refresh_token)) {
+        if (empty($this->Client_id) || empty($this->Client_secret) || empty($this->BaseUrl) || empty($this->AppID) || empty($this->getRefresh_token())) {
+            $this->getLogger()->debug("Client Auth not set, please set Client_id, Client_secret, BaseUrl, AppID and refresh_token");
             return false;
         }
         return true;
@@ -313,6 +286,7 @@ class Configuration
             [
                 'expires_in' => $authBody['expires_in'],
                 'access_token' => $authBody['access_token'] ?? '',
+                'refresh_token' => $authBody['refresh_token'] ?? '',
                 'scope' => $authBody['scope'] ?? '',
                 'token_type' => $authBody['token_type'] ?? 'bearer',
                 'expires_at' => (isset($authBody['expires_at']) ? $authBody['expires_at'] : (new DateTime())->add(new DateInterval('PT' . $authBody['expires_in'] . 'S'))),
@@ -361,6 +335,43 @@ class Configuration
             return true;
         }
         return false;
+    }
+
+    public function isTokenValid(): bool
+    {
+        if ($this->isSameBaseUrl() && !$this->isTokenExpired()) {
+            return true;
+        }
+        return false;
+    }
+
+    protected function isTokenExpired(): bool
+    {
+        $auth = $this->getStorage();
+        if (isset($auth['expires_at'])) {
+            return $auth['expires_at'] <= (new DateTime());
+        }
+        return true;
+    }
+
+    protected function isSameBaseUrl(): bool
+    {
+        $auth = $this->getStorage();
+        if (isset($auth['baseurl'])) {
+            return $auth['baseurl'] === $this->getBaseUrl();
+        }
+        return false;
+    }
+
+    protected function basicTokenCheck(string $ScopeNeeded = null): bool|Exception
+    {
+        if (!$this->isClientAuthSet()) {
+            throw new Exception("Error in Fortnox Settings");
+        }
+        if ($ScopeNeeded != null && !$this->hasScope($ScopeNeeded)) {
+            throw new Exception("Error in fetching Access Token for basic APi CALL on Fortnox");
+        }
+        return true;
     }
 
     public function resetAccesToken()
