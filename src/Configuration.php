@@ -32,11 +32,11 @@ class Configuration
     protected logger $logstack;
     protected bool $ConnectDirectly = true;
     protected string $logpath = __DIR__ . './log/';
+    protected bool $Storage_Is_Session = false;
 
-    public function __construct(string $storagename = null, bool $ConnectDirectly = true)
+    public function __construct(bool $StorageInSession = true, bool $ConnectDirectly = true)
     {
-        $this->setStorageName($storagename);
-        $this->initateStorage();
+        $this->setStorageIsSession($StorageInSession);
         $this->tempFolderPath = sys_get_temp_dir();
         $this->ConnectDirectly = $ConnectDirectly;
     }
@@ -45,7 +45,7 @@ class Configuration
     {
         if ($logger == null) {
             $logger = new Logger(__CLASS__);
-            $logger->pushHandler(new StreamHandler($this->getLogPath() . '/api.log', Logger::DEBUG));
+            $logger->pushHandler(new StreamHandler($this->getLogPath() . DIRECTORY_SEPARATOR . 'api.log', Logger::DEBUG));
             $logger->pushHandler(new FirePHPHandler());
         }
         $this->logstack = $logger;
@@ -145,7 +145,7 @@ class Configuration
 
     public function getDebug(): bool
     {
-        return $this->debug;
+        return $this->debug ?? false;
     }
 
     public function getForceRefreshToken(): bool
@@ -172,6 +172,12 @@ class Configuration
         return $this;
     }
 
+    /**
+     * Important, this is predefined values you get from Fortnox directly, and is the Sites login, to request login for the user that you serve.
+     * Not to be confused with the Client_id, which is the login you use to connect to the API, named AppID here in this SDK.
+     * 
+     * @return string 
+     */
     public function getClient_id(): string
     {
         return $this->Client_id;
@@ -185,13 +191,13 @@ class Configuration
      */
     public function setRefresh_token(string $refresh_token): self
     {
-        $this->refresh_token = $refresh_token ?? '';
+        $this->saveToStorage(["refresh_token" => $refresh_token]);
         return $this;
     }
 
     public function getRefresh_token(): string
     {
-        return $this->refresh_token;
+        return $this->getStorage()["refresh_token"] ?? '';
     }
 
     /**
@@ -217,16 +223,25 @@ class Configuration
         return $this;
     }
 
-    public function saveToStorage(array $params): self
+    public function saveToStorage(array $asocArray): self
     {
-        $this->storage[$this->storage_name] = array_merge($this->storage[$this->storage_name], $params);
+        $this->initateStorage();
+        if ($this->getStorageIsSession()) {
+            $_SESSION[$this->storage_name] = array_merge($_SESSION[$this->storage_name], $asocArray);
+        } else {
+            $this->storage[$this->storage_name] = array_merge($this->storage[$this->storage_name], $asocArray);
+        }
         return $this;
     }
 
     public function unsetFromStorage(array $UnsetKeys): self
     {
         foreach ($UnsetKeys as $key) {
-            unset($this->storage[$this->storage_name][$key]);
+            if ($this->getStorageIsSession()) {
+                unset($_SESSION[$this->storage_name][$key]);
+            } else {
+                unset($this->storage[$this->storage_name][$key]);
+            }
         }
         return $this;
     }
@@ -238,64 +253,73 @@ class Configuration
 
     public function getStorage(): array
     {
-        if (!isset($this->storage[$this->storage_name])) {
-            $this->initateStorage();
+        $this->initateStorage();
+        if ($this->getStorageIsSession()) {
+            return $_SESSION[$this->storage_name] ?? [];
         }
+
         return $this->storage[$this->storage_name];
     }
 
-    private function isDebug(): bool
+    public function getStorageIsSession(): bool
     {
-        if (isset($this->debug) && $this->debug === true) {
-            return true;
-        }
-        return false;
+        return $this->Storage_Is_Session ?? false;
     }
 
-    public function initateStorage(): bool|Exception
+    public function setStorageIsSession(bool $UseSession = true): self
     {
-        if (isset($this->storage)) {
-            if (isset($this->storage[$this->storage_name])) {
-                return true;
+        $this->Storage_Is_Session = $UseSession;
+        return $this;
+    }
+
+    public function initateStorage(): bool
+    {
+        if (!isset($this->storage_name)) $this->storage_name = $this->storage_Default_name;
+
+        if ($this->getStorageIsSession()) {
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
             }
-        }
-        if (session_status() !== PHP_SESSION_ACTIVE && !$this->isDebug()) {
-            throw new Exception('Invalid AUTH storage. Use session_start() before instantiating Fortnox');
-        }
-        if ($this->storage_name == null) $this->storage_name = clone $this->storage_Default_name;
-        $this->storage[$this->storage_name] = [];
-        if ($this->isDebug()) {
+
+            if (!isset($_SESSION[$this->storage_name])) {
+                $_SESSION[$this->storage_name] = [];
+            }
             return true;
         }
-        if (!array_key_exists($this->storage_name, $_SESSION) || !is_array($_SESSION[$this->storage_name])) {
-            $_SESSION[$this->storage_name] = [];
-            $this->storage = &$_SESSION[$this->storage_name];
+
+        if (!$this->getStorageIsSession()) {
+            if (!isset($this->storage[$this->storage_name])) {
+                $this->storage[$this->storage_name] = [];
+            }
+            return true;
         }
-        return true;
+
+        return false;
     }
 
     public function isClientAuthSet(): bool
     {
-        if (empty($this->Client_id) || empty($this->Client_secret) || empty($this->BaseUrl)) {
+        if (empty($this->Client_id) || empty($this->Client_secret) || empty($this->BaseUrl) || empty($this->AppID) || empty($this->refresh_token)) {
             return false;
         }
         return true;
     }
 
 
-    public function saveNewAccessToken(array $authBody)
+    public function setAllTokens(array $authBody): self
     {
+        if (!isset($authBody['expires_in'])) $authBody['expires_in'] = 0;
         $this->saveToStorage(
             [
                 'expires_in' => $authBody['expires_in'],
-                'access_token' => $authBody['access_token'],
-                'scope' => $authBody['scope'],
-                'scope_array' => explode(' ', $authBody['scope']),
-                'token_type' => $authBody['token_type'],
-                'expires_at' => (new DateTime())->add(new DateInterval('PT' . $authBody['expires_in'] . 'S')),
+                'access_token' => $authBody['access_token'] ?? '',
+                'scope' => $authBody['scope'] ?? '',
+                'token_type' => $authBody['token_type'] ?? 'bearer',
+                'expires_at' => (isset($authBody['expires_at']) ? $authBody['expires_at'] : (new DateTime())->add(new DateInterval('PT' . $authBody['expires_in'] . 'S'))),
             ]
         );
         $this->setStorageExtraParams();
+        return $this;
     }
 
 
@@ -304,9 +328,7 @@ class Configuration
         $this->saveToStorage(
             [
                 'baseurl' => $this->getBaseUrl(),
-                'user_agent' => $this->getUserAgent(),
-                'debug' => $this->getDebug(),
-                'apiversion' => $this->getAPIversion()
+                'debug' => $this->getDebug()
             ]
         );
     }
@@ -319,7 +341,7 @@ class Configuration
         $fromright = substr($Scope, strpos($Scope, ':'), strlen($Scope) - strpos($Scope, ':') -  strpos(strrev($Scope), '.'));
         $scopeUri = substr($Scope, strpos($Scope, ':') + 1,);
 
-        $scopeArray = $this->getStorage()['scope_array'];
+        $scopeArray = explode(" ", $this->getStorage()['scope']);
         foreach ($scopeArray as $key => $value) {
             $pos = strpos($value, ':');
             if ($pos === false) {

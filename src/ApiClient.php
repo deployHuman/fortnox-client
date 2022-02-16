@@ -34,19 +34,14 @@ class ApiClient
         if ($ForceRefreshToken) $this->config->resetAccesToken();
         if ($this->isTokenValid($this->config->getStorage())) return true;
 
-        $response =  $this->Authentication()->callAPIAuthToGetAccessToken();
+        $response =  $this->Authentication()->callAPIRefreshAccessToken($this->config->getRefresh_token());
         $AcceptedStatus = [200];
-        if (!in_array($response->getStatusCode(), $AcceptedStatus)) return false;
+        if ($response == false || !in_array($response->getStatusCode(), $AcceptedStatus)) return false;
         $body = json_decode($response->getBody()->getContents(), true);
+        if (!isset($body["access_token"])) return false;
 
-        if ($body == false) return false;
-
-        if (isset($body["access_token"])) {
-            $this->config->saveNewAccessToken($body);
-            return true;
-        }
-
-        return false;
+        $this->config->setAllTokens($body);
+        return true;
     }
 
     /**
