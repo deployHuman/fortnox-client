@@ -289,7 +289,7 @@ class Configuration
                 'refresh_token' => $authBody['refresh_token'] ?? '',
                 'scope' => $authBody['scope'] ?? '',
                 'token_type' => $authBody['token_type'] ?? 'bearer',
-                'expires_at' => (isset($authBody['expires_at']) ? $authBody['expires_at'] : (new DateTime())->add(new DateInterval('PT' . $authBody['expires_in'] . 'S'))),
+                'expires_at' => (isset($authBody['expires_at']) ? (new DateTime($authBody['expires_at'])) : (new DateTime())->add(new DateInterval('PT' . $authBody['expires_in'] . 'S'))),
             ]
         );
         $this->setStorageExtraParams();
