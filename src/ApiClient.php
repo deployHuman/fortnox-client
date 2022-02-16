@@ -2,8 +2,9 @@
 
 namespace DeployHuman\fortnox;
 
-use DateTime;
+
 use DeployHuman\fortnox\Api\Authentication;
+use DeployHuman\fortnox\Api\Fortnox\Fortnox;
 use GuzzleHttp\Client;
 
 class ApiClient
@@ -53,5 +54,16 @@ class ApiClient
     public function Config(): Configuration
     {
         return $this->config;
+    }
+
+
+    /**
+     * Grouped methods all related to Basic Fortnox
+     *
+     * @return Fortnox
+     */
+    public function Fortnox(): Fortnox
+    {
+        return new Fortnox($this->config);
     }
 }
