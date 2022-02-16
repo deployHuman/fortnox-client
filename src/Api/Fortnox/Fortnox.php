@@ -16,4 +16,15 @@ class Fortnox extends ApiClient
     {
         return new CompanyInformation($this->config);
     }
+
+    /**
+     * Invoices
+     *
+     * @return Invoices
+     * @documentation https://apps.fortnox.se/apidocs#tag/InvoicesResource
+     */
+    public function Invoices(): Invoices
+    {
+        return new Invoices($this->config);
+    }
 }
