@@ -17,7 +17,7 @@ class ApiClient
     protected Configuration $config;
     protected array $APIErrorlog = [];
 
-    protected function __construct(null|Configuration &$config = null)
+    public function __construct(null|Configuration &$config = null)
     {
         if (!isset($this->config)) {
             $this->config = $config ?? new Configuration();
