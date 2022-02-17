@@ -61,6 +61,22 @@ class scopes
 
 
     /**
+     * Returns every scope as an array
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        $returnarray = [];
+        foreach ($this as $key => $value) {
+            if ($value !== null) {
+                $returnarray[$key] = $value;
+            }
+        }
+        return $returnarray;
+    }
+
+    /**
      * Makes a string of all scopes which are set to true, and returns it in the format needed in the API Request
      *
      * @return string
