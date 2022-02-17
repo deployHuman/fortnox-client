@@ -17,6 +17,18 @@ class Fortnox extends ApiClient
         return new CompanyInformation($this->config);
     }
 
+
+    /**
+     * Customers
+     *
+     * @return Customers
+     * @documentation https://apps.fortnox.se/apidocs#tag/CustomersResource
+     */
+    public function Customers(): Customers
+    {
+        return new Customers($this->config);
+    }
+
     /**
      * Invoices
      *
