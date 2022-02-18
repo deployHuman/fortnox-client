@@ -632,7 +632,7 @@ class Customer
      */
     public function hydrate(array|self $SourceInfo)
     {
-        if ($SourceInfo instanceof Customer) {
+        if ($SourceInfo instanceof self) {
             $SourceInfo = $SourceInfo->toArray();
         }
 
