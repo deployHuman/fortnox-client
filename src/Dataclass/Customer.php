@@ -653,15 +653,11 @@ class Customer
 
     public function isValid(): bool
     {
-        if (!isset($this->address1) || empty($this->address1))                      return false;
-        if (!isset($this->city) || empty($this->city))                              return false;
-        if (!isset($this->countryCode) || empty($this->countryCode))                return false;
         if (!isset($this->name) || empty($this->name))                              return false;
         if (!isset($this->organisationNumber) || empty($this->organisationNumber))  return false;
         if (!isset($this->type) || empty($this->type))                              return false;
         if (!isset($this->VATType) || empty($this->VATType))                        return false;
         if (!isset($this->customerNumber) || empty($this->customerNumber))          return false;
-        if (!isset($this->zipCode) || empty($this->zipCode))                        return false;
         return true;
     }
 
@@ -669,13 +665,17 @@ class Customer
     {
         $returnarray = [];
         foreach ($this as $key => $value) {
-            if ($value !== null) {
-                if ($value instanceof CustomerType || $value instanceof VATType) {
-                    $returnarray[ucfirst($key)] = $value->value;
-                    continue;
-                }
-                $returnarray[ucfirst($key)] = $value;
+            if ($value == null || $value == "") continue;
+            if ($value instanceof CustomerType || $value instanceof VATType) {
+                $returnarray[ucfirst($key)] = $value->value;
+                continue;
             }
+            if ($value instanceof DefaultDeliveryTypes || $value instanceof DefaultTemplates) {
+                $returnarray[ucfirst($key)] = $value->toArray();
+                continue;
+            }
+
+            $returnarray[ucfirst($key)] = $value;
         }
         if (!isset($returnarray['CustomerNumber']) && isset($this->organisationNumber)) {
             $returnarray['CustomerNumber'] = $this->organisationNumber;
