@@ -17,9 +17,9 @@ use InvalidArgumentException;
 class Customer
 {
     public  string $url;
-    public  string $address1 = '';
+    public  string $address1;
     public  string $address2;
-    public  string $city = '';
+    public  string $city;
     public  string $country;
     public  string $comments;
     public  string $currency;
@@ -70,7 +70,7 @@ class Customer
     public  string $termsOfPayment;
     public  CustomerType $type;
     public  string $vatNumber;
-    public  VATType $VATType = VATType::SEVAT;
+    public  VATType $VATType;
     public  string $visitingAddress;
     public  string $visitingCity;
     public  string $visitingCountry;
@@ -79,7 +79,7 @@ class Customer
     public  string $wayOfDelivery;
     public  string $www;
     public  string $yourReference;
-    public  string $zipCode = '';
+    public  string $zipCode;
 
     public function setUrl(string $url): self
     {
