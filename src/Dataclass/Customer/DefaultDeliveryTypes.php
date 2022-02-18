@@ -17,14 +17,9 @@ class DefaultDeliveryTypes
     protected EnumDefaultDeliveryTypes $order;
     protected EnumDefaultDeliveryTypes $offer;
 
-    public function __construct(
-        EnumDefaultDeliveryTypes $invoice = null,
-        EnumDefaultDeliveryTypes $order = null,
-        EnumDefaultDeliveryTypes $offer = null
-    ) {
-        $this->invoice = $invoice;
-        $this->order = $order;
-        $this->offer = $offer;
+    public function __construct(array|self $preHydratedData = [])
+    {
+        $this->hydrate($preHydratedData);
     }
 
     public function getInvoice(): EnumDefaultDeliveryTypes
@@ -61,6 +56,31 @@ class DefaultDeliveryTypes
         $this->offer = $offer;
 
         return $this;
+    }
+
+    /**
+     * Hydrates the Object from an array or other Object of this type with keys matching the property names.
+     * 
+     * Will not unset any properties that are not in the Source but present in the Object.
+     * Will still trigger exceptions for invalid values.
+     * 
+     * @param array|self $SourceInfo
+     * @return void
+     */
+    public function hydrate(array|self $SourceInfo)
+    {
+        if ($SourceInfo instanceof self) {
+            $SourceInfo = $SourceInfo->toArray();
+        }
+
+        foreach ($SourceInfo as $key => $value) {
+            if ($value == null) continue;
+            $method = 'set' . ucfirst($key);
+            if (!method_exists($this, $method)) continue;
+            if (EnumDefaultDeliveryTypes::tryFrom($value) == null) continue;
+
+            $this->$method(EnumDefaultDeliveryTypes::tryFrom($value));
+        }
     }
 
     public function toArray(): array

@@ -605,6 +605,51 @@ class Customer
         return $this;
     }
 
+    /**
+     * Hydrates the Object from an array or other Customer Object with keys matching the property names.
+     * 
+     * Will not unset any properties that are not in the Source but present in the Object.
+     * Will still trigger exceptions for invalid values.
+     * 
+     * @param array|self $SourceInfo
+     * @return void
+     */
+    public function hydrate(array|self $SourceInfo)
+    {
+        if ($SourceInfo instanceof Customer) {
+            $SourceInfo = $SourceInfo->toArray();
+        }
+
+        foreach ($SourceInfo as $key => $value) {
+            if ($value == null) continue;
+
+            $method = 'set' . ucfirst($key);
+            if (!method_exists($this, $method)) continue;
+
+            if (mb_strtolower($key) == 'defaultdeliverytypes') {
+                $this->$method(new DefaultDeliveryTypes($value));
+                continue;
+            }
+
+            if (mb_strtolower($key) == 'defaulttemplates') {
+                $this->$method(new DefaultTemplates($value));
+                continue;
+            }
+            if (mb_strtolower($key) == 'type') {
+                if (CustomerType::tryFrom($value) == null) continue;
+                $this->$method(CustomerType::tryFrom($value));
+                continue;
+            }
+
+            if (mb_strtolower($key) == 'vattype') {
+                if (VATType::tryFrom($value) == null) continue;
+                $this->$method(VATType::tryFrom($value));
+                continue;
+            }
+
+            $this->$method($value);
+        }
+    }
 
     public function isValid(): bool
     {

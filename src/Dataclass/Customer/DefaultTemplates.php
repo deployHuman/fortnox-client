@@ -28,16 +28,9 @@ class DefaultTemplates
     protected string $order;
 
 
-    public function __construct(
-        string $cashInvoice = null,
-        string $invoice = null,
-        string $offer = null,
-        string $order = null
-    ) {
-        $this->cashInvoice = $cashInvoice;
-        $this->invoice = $invoice;
-        $this->offer = $offer;
-        $this->order = $order;
+    public function __construct(array|self $preHydratedData = [])
+    {
+        $this->hydrate($preHydratedData);
     }
 
     public function getCashInvoice(): string
@@ -86,6 +79,29 @@ class DefaultTemplates
         $this->order = $order;
 
         return $this;
+    }
+
+    /**
+     * Hydrates the Object from an array or other Object of this type with keys matching the property names.
+     * 
+     * Will not unset any properties that are not in the Source but present in the Object.
+     * Will still trigger exceptions for invalid values.
+     * 
+     * @param array|self $SourceInfo
+     * @return void
+     */
+    public function hydrate(array|self $SourceInfo)
+    {
+        if ($SourceInfo instanceof self) {
+            $SourceInfo = $SourceInfo->toArray();
+        }
+
+        foreach ($SourceInfo as $key => $value) {
+            if ($value == null) continue;
+            $method = 'set' . ucfirst($key);
+            if (!method_exists($this, $method)) continue;
+            $this->$method($value);
+        }
     }
 
     public function toArray(): array
