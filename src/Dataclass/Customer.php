@@ -610,6 +610,16 @@ class Customer
         $this->zipCode = $zipCode;
         return $this;
     }
+    /**
+     * Will only will return an number in string format.
+     * Good use as Fortnox keeps changing the customer number to include a dash
+     *
+     * @return string|null
+     */
+    public function getOrganisationNumber(): ?string
+    {
+        return strval(preg_replace('/\D/', '', ($this->organisationNumber ?? '')));
+    }
 
     /**
      * Hydrates the Object from an array or other Customer Object with keys matching the property names.
