@@ -81,6 +81,12 @@ class Customer
     public  string $yourReference;
     public  string $zipCode;
 
+
+    public function __construct(array|self $preHydratedData = [])
+    {
+        $this->hydrate($preHydratedData);
+    }
+
     public function setUrl(string $url): self
     {
         $this->url = $url;
