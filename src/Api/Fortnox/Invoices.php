@@ -4,8 +4,7 @@ namespace DeployHuman\fortnox\Api\Fortnox;
 
 use DeployHuman\fortnox\ApiClient;
 use DeployHuman\fortnox\Enum\ApiMethod;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Psr7\Message;
+use DeployHuman\fortnox\QueryBuilder\InvoiceParams;
 use GuzzleHttp\Psr7\Response;
 
 class Invoices extends ApiClient
@@ -13,11 +12,12 @@ class Invoices extends ApiClient
 
     /**
      * Retrieve a single invoice.
-     *
-     * @return Response|false
+     * 
+     * @param string $DocumentNumber
+     * @return Response
      * @documentation https://apps.fortnox.se/apidocs#operation/get_InvoicesResource
      */
-    public function apiGetInvoice(string $DocumentNumber): Response|false
+    public function apiGetInvoice(string $DocumentNumber): Response
     {
         return $this->apiWrapper(ApiMethod::GET, '/3/invoices/' . $DocumentNumber);
     }
@@ -26,11 +26,13 @@ class Invoices extends ApiClient
     /**
      * Retrieve a list of invoices.
      *
-     * @return Response|false
+     * @param array $params use QueryBuilder named `InvoiceParams` to help with params 
+     * @return Response
      * @documentation https://apps.fortnox.se/apidocs#operation/list_InvoicesResource
      */
-    public function apiListInvoices(array $params = []): Response|false
+    public function apiListInvoices(array|InvoiceParams $params = []): Response
     {
-        return $this->apiWrapper(ApiMethod::GET, '/3/invoices/', [], $params);
+        if (isset($params)) $params = $params instanceof InvoiceParams ? $params->toArray() : $params;
+        return $this->apiWrapper(ApiMethod::GET, '/3/invoices', [], $params);
     }
 }
