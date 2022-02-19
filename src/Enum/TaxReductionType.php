@@ -2,14 +2,13 @@
 
 namespace DeployHuman\fortnox\Enum;
 
-
 enum TaxReductionType: string
 {
-    case NONE = "NONE";
+    case NONE = "none";
 
-    case ROT = "ROT";
+    case ROT = "rot";
 
-    case RUT = "RUT";
+    case RUT = "rut";
 
-    case GREEN = "GREEN";
+    case GREEN = "green";
 }

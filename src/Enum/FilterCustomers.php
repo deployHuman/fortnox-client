@@ -5,7 +5,7 @@ namespace DeployHuman\fortnox\Enum;
 
 enum FilterCustomers: string
 {
-    case ACTIVE = "ACTIVE";
+    case ACTIVE = "active";
 
-    case INACTIVE = "INACTIVE";
+    case INACTIVE = "inactive";
 }
