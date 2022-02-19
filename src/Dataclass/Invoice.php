@@ -102,6 +102,10 @@ class Invoice
 
     public function setCountry(string $country): self
     {
+        $AcceptedCountrys = ["sverige"];
+        if (!in_array(mb_strtolower($country), $AcceptedCountrys)) {
+            throw new \InvalidArgumentException("Invalid country");
+        }
         $this->country = $country;
         return $this;
     }
