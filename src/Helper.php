@@ -13,7 +13,7 @@ class Helper
      */
     public static function getRandomKey(int $length): string
     {
-        if ($length <= 0) $length = 10;
+        if ($length < 1) $length = 10;
 
         return bin2hex(random_bytes($length));
     }
