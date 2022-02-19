@@ -632,37 +632,25 @@ class Customer
      */
     public function hydrate(array|self $SourceInfo)
     {
-        if ($SourceInfo instanceof self) {
-            $SourceInfo = $SourceInfo->toArray();
-        }
+        if ($SourceInfo instanceof self) $SourceInfo = $SourceInfo->toArray();
 
+        $enumNameSpace = dirname(__NAMESPACE__) . DIRECTORY_SEPARATOR . 'Enum' . DIRECTORY_SEPARATOR;
         foreach ($SourceInfo as $key => $value) {
-            if ($value == null) continue;
-
             $method = 'set' . ucfirst($key);
-            if (!method_exists($this, $method)) continue;
+            if ($value == null || !method_exists($this, $method)) continue;
 
-            if (mb_strtolower($key) == 'defaultdeliverytypes') {
-                $this->$method(new DefaultDeliveryTypes($value));
+            $subClass = __CLASS__  . DIRECTORY_SEPARATOR . ucfirst($key);
+            if (class_exists($subClass)) {
+                $this->$method(new $subClass($value));
                 continue;
             }
 
-            if (mb_strtolower($key) == 'defaulttemplates') {
-                $this->$method(new DefaultTemplates($value));
+            $Enum = (mb_strtolower($key) == 'type') ? $enumNameSpace . "CustomerType" : $enumNameSpace . $key;
+            if (enum_exists($Enum)) {
+                if ($Enum::tryFrom($value) == null) continue;
+                $this->$method($Enum::tryFrom($value));
                 continue;
             }
-            if (mb_strtolower($key) == 'type') {
-                if (CustomerType::tryFrom($value) == null) continue;
-                $this->$method(CustomerType::tryFrom($value));
-                continue;
-            }
-
-            if (mb_strtolower($key) == 'vattype') {
-                if (VATType::tryFrom($value) == null) continue;
-                $this->$method(VATType::tryFrom($value));
-                continue;
-            }
-
             $this->$method($value);
         }
     }
