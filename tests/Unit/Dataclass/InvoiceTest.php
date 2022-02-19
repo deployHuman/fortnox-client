@@ -21,4 +21,20 @@ final class InvoiceTest extends TestCase
         $invoiceOne = new Invoice;
         $this->assertFalse($invoiceOne->isValid());
     }
+
+    /** @test */
+    public function catchThrowOnCountry(): void
+    {
+        $invoiceOne = new Invoice;
+        $this->expectException(\InvalidArgumentException::class);
+        $this->assertFalse($invoiceOne->setCountry("Sweden"));
+    }
+
+
+    /** @test */
+    public function dontThrowExceptionOnCorrect(): void
+    {
+        $invoiceOne = new Invoice;
+        $this->assertInstanceOf(Invoice::class, $invoiceOne->setCountry("Sverige"));
+    }
 }
