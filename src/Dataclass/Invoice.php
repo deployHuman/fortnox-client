@@ -51,7 +51,7 @@ class Invoice
     public InvoiceType $invoiceType;
     public Language $language;
     public bool $notCompleted;
-    public string $ocr;
+    public string $OCR;
     public string $ourReference;
     public string $paymentWay;
     public string $phone1;
@@ -293,9 +293,9 @@ class Invoice
         return $this;
     }
 
-    public function setOcr(string $ocr): self
+    public function setOCR(string $OCR): self
     {
-        $this->ocr = $ocr;
+        $this->OCR = $OCR;
         return $this;
     }
 
