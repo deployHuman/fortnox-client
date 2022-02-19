@@ -1,4 +1,4 @@
-# PHP Client for Kivra
+# PHP Client for Fortnox
 
 - API
 
@@ -48,11 +48,6 @@ $body = (array) json_decode($response->getBody()->getContents(), true);
 
 //When tokens is saved, start using the Instance for your needs.
 $response = $apiInstance->Fortnox()->CompanyInformation()->apiGETCompanyInformation();
-
-
-
-?>
-
 ```
 
 ## Documentation for API Endpoints
