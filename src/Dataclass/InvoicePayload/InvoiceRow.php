@@ -239,27 +239,14 @@ class InvoiceRow
         return $this->VAT ?? 0;
     }
 
-
     public function toArray(): array
     {
-        return [
-            'AccountNumber' => $this->getAccountNumber(),
-            'ArticleNumber' => $this->getArticleNumber(),
-            'CostCenter' => $this->getCostCenter(),
-            'DeliveredQuantity' => $this->getDeliveredQuantity(),
-            'Description' => $this->getDescription(),
-            'Discount' => $this->getDiscount(),
-            'DiscountType' => $this->getDiscountType(),
-            'HouseWork' => $this->getHouseWork(),
-            'HouseWorkHoursToReport' => $this->getHouseWorkHoursToReport(),
-            'HouseWorkType' => $this->getHouseWorkType(),
-            'Price' => $this->getPrice(),
-            'Project' => $this->getProject(),
-            'RowId' => $this->getRowId(),
-            'StockPointCode' => $this->getStockPointCode(),
-            'Unit' => $this->getUnit(),
-            'VAT' => $this->getVAT(),
-        ];
+        $returnarray = [];
+        foreach ($this as $key => $value) {
+            if ($value == null || $value == "") continue;
+            $returnarray[ucfirst($key)] = $value;
+        }
+        return $returnarray;
     }
 
     public function __toString()

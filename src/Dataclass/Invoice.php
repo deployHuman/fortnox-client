@@ -423,7 +423,14 @@ class Invoice
 
             $Enum = $enumNameSpace .  $key;
             if (enum_exists($Enum)) {
-                $returnarray[mb_strtolower($key)] = $value->value;
+                $returnarray[$key] = $value->value;
+                continue;
+            }
+
+            if (is_array($value) && ($value[0] instanceof InvoiceRow)) {
+                $returnarray[$key] = array_map(function (InvoiceRow $invoiceRow) {
+                    return $invoiceRow->toArray();
+                }, $value);
                 continue;
             }
             $returnarray[ucfirst($key)] = $value;
