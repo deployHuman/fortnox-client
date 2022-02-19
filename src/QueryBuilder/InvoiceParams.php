@@ -249,7 +249,6 @@ class InvoiceParams
 
             $Enum = $enumNameSpace . (($key == 'sortby') ?  'InvoiceSortby' : $key);
             if (enum_exists($Enum)) {
-                var_dump($value);
                 $returnarray[mb_strtolower($key)] = mb_strtolower($value->value);
                 continue;
             }
