@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DeployHuman\fortnox\Dataclass;
 
+use DateTime;
 use DeployHuman\fortnox\dataclass\InvoicePayload\EDIInformation;
 use DeployHuman\fortnox\dataclass\InvoicePayload\EmailInformation;
 use DeployHuman\fortnox\Dataclass\InvoicePayload\InvoiceRow;
@@ -407,7 +408,9 @@ class Invoice
 
     public function isValid(): bool
     {
-        return !empty($this->customerNumber);
+        if (empty($this->customerNumber) || empty($this->dueDate))                              return false;
+        if ((new DateTime($this->invoiceDate ?? "")) > (new DateTime($this->dueDate ?? "")))    return false;
+        return true;
     }
 
     public function toArray(): array
