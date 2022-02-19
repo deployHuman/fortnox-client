@@ -3,7 +3,6 @@
 namespace DeployHuman\tests\Unit\Dataclass;
 
 use DeployHuman\fortnox\Dataclass\Invoice;
-use DeployHuman\fortnox\Enum\VATType;
 use DeployHuman\tests\TestCase;
 
 final class InvoiceTest extends TestCase
