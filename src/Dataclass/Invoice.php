@@ -403,7 +403,7 @@ class Invoice
 
     public function isValid(): bool
     {
-        return ! empty($this->VATType) && ! empty($this->customerNumber);
+        return !empty($this->customerNumber);
     }
 
     public function toArray(): array
