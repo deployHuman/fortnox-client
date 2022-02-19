@@ -48,7 +48,7 @@ class Invoice
     public string $externalInvoiceReference2;
     public float $freight;
     public string $invoiceDate;
-    public array $invoiceRows;
+    public array $InvoiceRows;
     public InvoiceType $invoiceType;
     public Language $language;
     public bool $notCompleted;
@@ -265,18 +265,18 @@ class Invoice
     /**
      * An array of `InvoiceRow` objects.
      *
-     * @param array $invoiceRows
+     * @param array $InvoiceRows
      * @return self
      * @throws \InvalidArgumentException
      */
-    public function setInvoiceRows(array $invoiceRows): self
+    public function setInvoiceRows(array $InvoiceRows): self
     {
-        foreach ($invoiceRows as $key => $value) {
+        foreach ($InvoiceRows as $key => $value) {
             if (!($value instanceof InvoiceRow)) {
                 throw new \InvalidArgumentException('InvoiceRow must be instance of InvoiceRow');
             }
         }
-        $this->invoiceRows = $invoiceRows;
+        $this->InvoiceRows = $InvoiceRows;
         return $this;
     }
 
