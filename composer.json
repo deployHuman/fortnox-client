@@ -25,5 +25,10 @@
         "psr-4": {
             "DeployHuman\\fortnox\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DeployHuman\\tests\\": "tests/"
+        }
     }
 }
