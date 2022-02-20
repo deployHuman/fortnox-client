@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DeployHuman\fortnox\Dataclass;
 
+use DateTime;
 use DeployHuman\fortnox\dataclass\InvoicePayload\EDIInformation;
 use DeployHuman\fortnox\dataclass\InvoicePayload\EmailInformation;
 use DeployHuman\fortnox\Dataclass\InvoicePayload\InvoiceRow;
@@ -47,11 +48,11 @@ class Invoice
     public string $externalInvoiceReference2;
     public float $freight;
     public string $invoiceDate;
-    public array $invoiceRows;
+    public array $InvoiceRows;
     public InvoiceType $invoiceType;
     public Language $language;
     public bool $notCompleted;
-    public string $ocr;
+    public string $OCR;
     public string $ourReference;
     public string $paymentWay;
     public string $phone1;
@@ -102,6 +103,10 @@ class Invoice
 
     public function setCountry(string $country): self
     {
+        $AcceptedCountrys = ["sverige"];
+        if (!in_array(mb_strtolower($country), $AcceptedCountrys)) {
+            throw new \InvalidArgumentException("Invalid country");
+        }
         $this->country = $country;
         return $this;
     }
@@ -260,18 +265,18 @@ class Invoice
     /**
      * An array of `InvoiceRow` objects.
      *
-     * @param array $invoiceRows
+     * @param array $InvoiceRows
      * @return self
      * @throws \InvalidArgumentException
      */
-    public function setInvoiceRows(array $invoiceRows): self
+    public function setInvoiceRows(array $InvoiceRows): self
     {
-        foreach ($invoiceRows as $key => $value) {
+        foreach ($InvoiceRows as $key => $value) {
             if (!($value instanceof InvoiceRow)) {
                 throw new \InvalidArgumentException('InvoiceRow must be instance of InvoiceRow');
             }
         }
-        $this->invoiceRows = $invoiceRows;
+        $this->InvoiceRows = $InvoiceRows;
         return $this;
     }
 
@@ -293,9 +298,9 @@ class Invoice
         return $this;
     }
 
-    public function setOcr(string $ocr): self
+    public function setOCR(string $OCR): self
     {
-        $this->ocr = $ocr;
+        $this->OCR = $OCR;
         return $this;
     }
 
@@ -403,7 +408,9 @@ class Invoice
 
     public function isValid(): bool
     {
-        return ! empty($this->VATType) && ! empty($this->customerNumber);
+        if (empty($this->customerNumber) || empty($this->dueDate))                              return false;
+        if ((new DateTime($this->invoiceDate ?? "")) > (new DateTime($this->dueDate ?? "")))    return false;
+        return true;
     }
 
     public function toArray(): array
@@ -416,7 +423,14 @@ class Invoice
 
             $Enum = $enumNameSpace .  $key;
             if (enum_exists($Enum)) {
-                $returnarray[mb_strtolower($key)] = $value->value;
+                $returnarray[$key] = $value->value;
+                continue;
+            }
+
+            if (is_array($value) && ($value[0] instanceof InvoiceRow)) {
+                $returnarray[$key] = array_map(function (InvoiceRow $invoiceRow) {
+                    return $invoiceRow->toArray();
+                }, $value);
                 continue;
             }
             $returnarray[ucfirst($key)] = $value;

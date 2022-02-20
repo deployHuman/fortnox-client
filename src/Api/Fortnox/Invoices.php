@@ -46,8 +46,9 @@ class Invoices extends ApiClient
      * @param Invoice $invoice
      * @return Response
      */
-    public function apiCreateInvoice(Invoice $invoice): Response
+    public function apiCreateInvoice(Invoice $invoice): ?Response
     {
+        if (!$invoice->isValid()) return null;
         return $this->post('/3/invoices', $invoice->toArray());
     }
 }
