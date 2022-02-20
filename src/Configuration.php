@@ -26,13 +26,14 @@ class Configuration
     protected array $storage;
     protected bool $debug = false;
     protected logger $logstack;
-    protected string $logpath = __DIR__ . './log/';
+    protected string $logpath = __DIR__ . '/../log/';
     protected bool $Storage_Is_Session = false;
 
     public function __construct(bool $StorageInSession = true)
     {
         $this->setStorageIsSession($StorageInSession);
         $this->tempFolderPath = sys_get_temp_dir();
+        $this->setGlobalLogger();
     }
 
     private function setGlobalLogger(Logger $logger = null)
@@ -50,7 +51,6 @@ class Configuration
 
     public function getLogger(): Logger
     {
-        if (!isset($this->logstack)) $this->setGlobalLogger();
         return $this->logstack;
     }
 
@@ -60,8 +60,6 @@ class Configuration
         $this->setGlobalLogger($logstack);
         return $this;
     }
-
-
 
     public function getDebugHandler(): HandlerStack
     {
@@ -83,7 +81,11 @@ class Configuration
 
     public function getLogPath(): string
     {
-        return $this->logpath;
+        if (!realpath($this->logpath)) {
+            mkdir($this->logpath);
+        }
+
+        return realpath($this->logpath);
     }
 
     public function setClient_secret(string $Client_secret): self
@@ -129,7 +131,6 @@ class Configuration
     {
         return $this->debug ?? false;
     }
-
 
     /**
      * Important, this is predefined values you get from Fortnox directly, and is the Sites login, to request login for the user that you serve.
