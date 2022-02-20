@@ -4,7 +4,6 @@ namespace DeployHuman\fortnox\Api\Fortnox;
 
 use DeployHuman\fortnox\ApiClient;
 use DeployHuman\fortnox\Dataclass\Invoice;
-use DeployHuman\fortnox\Enum\ApiMethod;
 use DeployHuman\fortnox\QueryBuilder\InvoiceParams;
 use GuzzleHttp\Psr7\Response;
 
@@ -20,7 +19,7 @@ class Invoices extends ApiClient
      */
     public function apiGetInvoice(string $DocumentNumber): Response
     {
-        return $this->apiWrapper(ApiMethod::GET, '/3/invoices/' . $DocumentNumber);
+        return $this->get('/3/invoices/' . $DocumentNumber);
     }
 
 
@@ -34,7 +33,7 @@ class Invoices extends ApiClient
     public function apiListInvoices(array|InvoiceParams $params = []): Response
     {
         if (isset($params)) $params = $params instanceof InvoiceParams ? $params->toArray() : $params;
-        return $this->apiWrapper(ApiMethod::GET, '/3/invoices', [], $params);
+        return $this->get('/3/invoices', [], $params);
     }
 
     /**
@@ -49,6 +48,6 @@ class Invoices extends ApiClient
      */
     public function apiCreateInvoice(Invoice $invoice): Response
     {
-        return $this->apiWrapper(ApiMethod::POST, '/3/invoices', $invoice->toArray());
+        return $this->post('/3/invoices', $invoice->toArray());
     }
 }
