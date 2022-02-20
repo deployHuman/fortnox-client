@@ -8,6 +8,8 @@ use DeployHuman\fortnox\Enum\ApiMethod;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\RequestOptions;
+use Monolog\ErrorHandler;
+use Monolog\Registry;
 
 class ApiClient
 {
@@ -20,6 +22,9 @@ class ApiClient
         if (!isset($this->config)) {
             $this->config = $config ?? new Configuration();
         }
+
+        Registry::addLogger($this->config->getLogger(), __CLASS__, true);
+        ErrorHandler::register($this->config->getLogger());
 
         $this->client = new Client([
             "base_uri" => $this->config->getBaseUrl(),

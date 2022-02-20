@@ -43,10 +43,7 @@ class Configuration
             $logger->pushHandler(new FirePHPHandler());
         }
         $this->logstack = $logger;
-        Registry::addLogger($logger, __CLASS__, true);
-        ErrorHandler::register($logger);
     }
-
 
     public function getLogger(): Logger
     {
