@@ -26,7 +26,7 @@ class Configuration
     protected array $storage;
     protected bool $debug = false;
     protected logger $logstack;
-    protected string $logpath = __DIR__ . './log/';
+    protected string $logpath = __DIR__ . '/../log/';
     protected bool $Storage_Is_Session = false;
 
     public function __construct(bool $StorageInSession = true)
@@ -83,7 +83,11 @@ class Configuration
 
     public function getLogPath(): string
     {
-        return $this->logpath;
+        if (!realpath($this->logpath)) {
+            mkdir($this->logpath);
+        }
+
+        return realpath($this->logpath);
     }
 
     public function setClient_secret(string $Client_secret): self
