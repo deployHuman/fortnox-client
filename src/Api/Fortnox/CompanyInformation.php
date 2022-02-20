@@ -3,9 +3,6 @@
 namespace DeployHuman\fortnox\Api\Fortnox;
 
 use DeployHuman\fortnox\ApiClient;
-use DeployHuman\fortnox\Enum\ApiMethod;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Psr7\Response;
 
 class CompanyInformation extends ApiClient
@@ -20,6 +17,6 @@ class CompanyInformation extends ApiClient
      */
     public function apiCompanyInformation(): Response|false
     {
-        return $this->apiWrapper(ApiMethod::GET, '/3/companyinformation');
+        return $this->get('/3/companyinformation');
     }
 }

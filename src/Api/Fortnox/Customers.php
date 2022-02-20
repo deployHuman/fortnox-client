@@ -4,7 +4,6 @@ namespace DeployHuman\fortnox\Api\Fortnox;
 
 use DeployHuman\fortnox\ApiClient;
 use DeployHuman\fortnox\Dataclass\Customer;
-use DeployHuman\fortnox\Enum\ApiMethod;
 use DeployHuman\fortnox\Enum\FilterCustomers;
 use GuzzleHttp\Psr7\Response;
 
@@ -21,7 +20,7 @@ class Customers extends ApiClient
      */
     public function apiListCustomers(null|FilterCustomers $filter = null): Response
     {
-        return $this->apiWrapper(ApiMethod::GET, '/3/customers/', [], isset($filter) ? ["filter" => $filter->value] : []);
+        return $this->get('/3/customers/', [], isset($filter) ? ["filter" => $filter->value] : []);
     }
 
     /**
@@ -35,7 +34,7 @@ class Customers extends ApiClient
     public function apiCreateCustomer(Customer $SingleCustomer): Response
     {
         if (!$SingleCustomer->isValid()) return false;
-        return $this->apiWrapper(ApiMethod::POST, '/3/customers/', ["Customer" => $SingleCustomer->toArray()]);
+        return $this->post('/3/customers/', ["Customer" => $SingleCustomer->toArray()]);
     }
 
     /**
@@ -48,7 +47,7 @@ class Customers extends ApiClient
      */
     public function apiGetCustomer(string $CustomerNumber): Response
     {
-        return $this->apiWrapper(ApiMethod::GET, '/3/customers/' . $CustomerNumber);
+        return $this->get('/3/customers/' . $CustomerNumber);
     }
 
 
@@ -64,8 +63,7 @@ class Customers extends ApiClient
      */
     public function apiUpdateCustomer(Customer $SingleCustomer): Response
     {
-        if (!$SingleCustomer->isValid()) return false;
-        return $this->apiWrapper(ApiMethod::PUT, '/3/customers/' . $SingleCustomer->customerNumber, ["Customer" => $SingleCustomer->toArray()]);
+        return $this->put('/3/customers/' . $SingleCustomer->customerNumber, ["Customer" => $SingleCustomer->toArray()]);
     }
 
 
@@ -81,6 +79,6 @@ class Customers extends ApiClient
      */
     public function apiRemoveCustomer(string $CustomerNumber): Response
     {
-        return $this->apiWrapper(ApiMethod::DELETE, '/3/customers/' . $CustomerNumber);
+        return $this->delete('/3/customers/' . $CustomerNumber);
     }
 }
