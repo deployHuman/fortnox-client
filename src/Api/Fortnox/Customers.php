@@ -5,6 +5,7 @@ namespace DeployHuman\fortnox\Api\Fortnox;
 use DeployHuman\fortnox\ApiClient;
 use DeployHuman\fortnox\Dataclass\Customer;
 use DeployHuman\fortnox\Enum\FilterCustomers;
+use DeployHuman\fortnox\Enum\SearchCustomerType;
 use GuzzleHttp\Psr7\Response;
 
 class Customers extends ApiClient
@@ -45,9 +46,9 @@ class Customers extends ApiClient
      * @return Response
      * @documentation https://apps.fortnox.se/apidocs#operation/get_CustomersResource
      */
-    public function apiGetCustomer(string $CustomerNumber): Response
+    public function apiGetCustomer(string $UniqueNumber, SearchCustomerType $searchtype = SearchCustomerType::ORGANISATIONNUMBER): Response
     {
-        return $this->get('/3/customers/' . $CustomerNumber);
+        return $this->get('/3/customers/', [], [$searchtype->value => $UniqueNumber]);
     }
 
 
