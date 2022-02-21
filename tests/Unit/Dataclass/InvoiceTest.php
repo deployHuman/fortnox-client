@@ -11,30 +11,42 @@ final class InvoiceTest extends TestCase
     public function itCanEnsureAnInvoiceIsValid(): void
     {
         $invoice = new Invoice;
-        $invoice->setCustomerNumber('cus123456');
+        $dueDate = (new \DateTime)->modify('+2 days');
+
+        $invoice->setCustomerNumber('cus123456')
+            ->setDueDate($dueDate->format('Y-m-d'));
+
         $this->assertTrue($invoice->isValid());
     }
 
     /** @test */
-    public function itCanEnsureAnInvoiceIsInvalid(): void
+    public function itCanEnsureAnInvoiceIsInvalidWhenFirstCreated(): void
     {
-        $invoiceOne = new Invoice;
-        $this->assertFalse($invoiceOne->isValid());
+        $invoice = new Invoice;
+        $this->assertFalse($invoice->isValid());
+    }
+
+    /** @test */
+    public function itCanEnsureAnInvoiceIsInvalidGivenDueDateIsWrong(): void
+    {
+        $invoice = new Invoice;
+        $dueDate = (new \DateTime)->modify('-2 days');
+        $invoice->setDueDate($dueDate->format('Y-m-d'));
+        $this->assertFalse($invoice->isValid());
     }
 
     /** @test */
     public function catchThrowOnCountry(): void
     {
-        $invoiceOne = new Invoice;
+        $invoice = new Invoice;
         $this->expectException(\InvalidArgumentException::class);
-        $this->assertFalse($invoiceOne->setCountry("Sweden"));
+        $this->assertFalse($invoice->setCountry("Sweden"));
     }
-
 
     /** @test */
     public function dontThrowExceptionOnCorrect(): void
     {
-        $invoiceOne = new Invoice;
-        $this->assertInstanceOf(Invoice::class, $invoiceOne->setCountry("Sverige"));
+        $invoice = new Invoice;
+        $this->assertInstanceOf(Invoice::class, $invoice->setCountry("Sverige"));
     }
 }
