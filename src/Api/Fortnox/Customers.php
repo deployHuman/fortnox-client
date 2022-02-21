@@ -43,6 +43,7 @@ class Customers extends ApiClient
      * You need to supply the unique customer number that was returned when the customer was created or retrieved from the list of customers.
      *
      * @param string $CustomerNumber
+     * @param null|SearchCustomerType $SearchType defaults to ORGANISATIONNUMBER Search
      * @return Response
      * @documentation https://apps.fortnox.se/apidocs#operation/get_CustomersResource
      */
