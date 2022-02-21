@@ -5,6 +5,7 @@ namespace DeployHuman\fortnox\Api\Fortnox;
 use DeployHuman\fortnox\ApiClient;
 use DeployHuman\fortnox\Dataclass\Invoice;
 use DeployHuman\fortnox\QueryBuilder\InvoiceParams;
+use DeployHuman\fortnox\QueryBuilder\PaginationParams;
 use GuzzleHttp\Psr7\Response;
 
 class Invoices extends ApiClient
@@ -27,12 +28,15 @@ class Invoices extends ApiClient
      * Retrieve a list of invoices.
      *
      * @param array $params use QueryBuilder named `InvoiceParams` to help with params 
+     * @param null|PaginationParams $PageSetup
      * @return Response
      * @documentation https://apps.fortnox.se/apidocs#operation/list_InvoicesResource
      */
-    public function apiListInvoices(array|InvoiceParams $params = []): Response
+    public function apiListInvoices(array|InvoiceParams $invoiceParams = [],  null|PaginationParams $PageSetup = null): Response
     {
-        if (isset($params)) $params = $params instanceof InvoiceParams ? $params->toArray() : $params;
+        $params = [];
+        if (isset($invoiceParams))  $params = ($invoiceParams instanceof InvoiceParams) ? $invoiceParams->toArray() : $params;
+        if (isset($PageSetup))      $params =  array_merge($params, ...[$PageSetup->toArray()]);
         return $this->get('/3/invoices', [], $params);
     }
 
