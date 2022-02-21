@@ -6,6 +6,7 @@ use DeployHuman\fortnox\ApiClient;
 use DeployHuman\fortnox\Dataclass\Customer;
 use DeployHuman\fortnox\Enum\FilterCustomers;
 use DeployHuman\fortnox\Enum\SearchCustomerType;
+use DeployHuman\fortnox\QueryBuilder\PaginationParams;
 use GuzzleHttp\Psr7\Response;
 
 class Customers extends ApiClient
@@ -16,12 +17,16 @@ class Customers extends ApiClient
      * The customers are returned sorted by customer number with the lowest number appearing first.
      * 
      * @param null|FilterCustomers $filter
+     * @param null|PaginationParams $PageSetup
      * @return Response
      * @documentation https://apps.fortnox.se/apidocs#operation/list_CustomersResource
      */
-    public function apiListCustomers(null|FilterCustomers $filter = null): Response
+    public function apiListCustomers(null|FilterCustomers $filter = null,  null|PaginationParams $PageSetup = null): Response
     {
-        return $this->get('/3/customers/', [], isset($filter) ? ["filter" => $filter->value] : []);
+        $params = [];
+        if (isset($filter))     $params =  array_merge($params, ["filter" => $filter]);
+        if (isset($PageSetup))  $params =  array_merge($params, ...[$PageSetup->toArray()]);
+        return $this->get('/3/customers/', [],  $params);
     }
 
     /**
