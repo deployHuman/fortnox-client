@@ -49,9 +49,10 @@ class Invoices extends ApiClient
      *
      * @param Invoice $invoice
      * @return Response
+     * @documentation https://apps.fortnox.se/apidocs#operation/create_InvoicesResource
      */
     public function apiCreateInvoice(Invoice $invoice): Response
     {
-        return $this->post('/3/invoices', $invoice->toArray());
+        return $this->post('/3/invoices', ["Invoice" => $invoice->toArray()]);
     }
 }
