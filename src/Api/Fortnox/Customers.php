@@ -63,7 +63,6 @@ class Customers extends ApiClient
      */
     public function apiUpdateCustomer(Customer $SingleCustomer): Response
     {
-        if (!$SingleCustomer->isValid()) return false;
         return $this->put('/3/customers/' . $SingleCustomer->customerNumber, ["Customer" => $SingleCustomer->toArray()]);
     }
 
