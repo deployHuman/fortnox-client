@@ -64,7 +64,7 @@ class Configuration
 
     public function getDebugHandler(): ?HandlerStack
     {
-        if ($this->getDebug())  return null;
+        if (!$this->getDebug())  return null;
         $this->checkLogstack();
         $stack = HandlerStack::create();
         $stack->push(
