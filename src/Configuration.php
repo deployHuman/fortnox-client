@@ -35,33 +35,37 @@ class Configuration
         $this->tempFolderPath = sys_get_temp_dir();
     }
 
-    private function setGlobalLogger(Logger $logger = null)
+    /**
+     * Making sure there is a Logger set.
+     *
+     * @return void
+     */
+    private function checkLogstack(): void
     {
-        if ($logger == null) {
+        if (empty($this->logstack)) {
             $logger = new Logger(__CLASS__);
             $logger->pushHandler(new StreamHandler($this->getLogPath() . DIRECTORY_SEPARATOR . 'api.log', Logger::DEBUG));
             $logger->pushHandler(new FirePHPHandler());
+            $this->logstack = $logger;
         }
-        $this->logstack = $logger;
     }
 
     public function getLogger(): Logger
     {
-        if (!isset($this->logstack)) $this->setGlobalLogger();
+        $this->checkLogstack();
         return $this->logstack;
     }
 
     public function setLogger(Logger $logstack): self
     {
         $this->logstack = $logstack;
-        $this->setGlobalLogger($logstack);
         return $this;
     }
 
-
-
-    public function getDebugHandler(): HandlerStack
+    public function getDebugHandler(): ?HandlerStack
     {
+        if ($this->debug) null;
+        $this->checkLogstack();
         $stack = HandlerStack::create();
         $stack->push(
             Middleware::log(
