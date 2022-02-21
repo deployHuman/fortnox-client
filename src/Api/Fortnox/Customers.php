@@ -54,6 +54,9 @@ class Customers extends ApiClient
      */
     public function apiGetCustomer(string $UniqueNumber, SearchCustomerType $searchtype = SearchCustomerType::ORGANISATIONNUMBER): Response
     {
+        if ($searchtype == SearchCustomerType::CUSTOMERNUMBER) {
+            return $this->get('/3/customers/' . $UniqueNumber);
+        }
         return $this->get('/3/customers/', [], [$searchtype->value => $UniqueNumber]);
     }
 
