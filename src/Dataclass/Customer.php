@@ -8,6 +8,7 @@ use DeployHuman\fortnox\Dataclass\Customer\DefaultDeliveryTypes;
 use DeployHuman\fortnox\Dataclass\Customer\DefaultTemplates;
 use DeployHuman\fortnox\Enum\CustomerType;
 use DeployHuman\fortnox\Enum\VATType;
+use DeployHuman\fortnox\Helper;
 use InvalidArgumentException;
 
 /**
@@ -27,8 +28,8 @@ class Customer
     public  string $countryCode = 'SE';
     public  bool $active;
     public  string $customerNumber;
-    public  DefaultDeliveryTypes $defaultDeliveryTypes;
-    public  DefaultTemplates $defaultTemplates;
+    public  DefaultDeliveryTypes $DefaultDeliveryTypes;
+    public  DefaultTemplates $DefaultTemplates;
     public  string $deliveryAddress1;
     public  string $deliveryAddress2;
     public  string $deliveryCity;
@@ -176,7 +177,7 @@ class Customer
 
     public function setDefaultDeliveryTypes(DefaultDeliveryTypes $defaultDeliveryTypes): self
     {
-        $this->defaultDeliveryTypes = $defaultDeliveryTypes;
+        $this->DefaultDeliveryTypes = $defaultDeliveryTypes;
         return $this;
     }
 
@@ -634,18 +635,18 @@ class Customer
     {
         if ($SourceInfo instanceof self) $SourceInfo = $SourceInfo->toArray();
 
-        $enumNameSpace = dirname(__NAMESPACE__) . DIRECTORY_SEPARATOR . 'Enum' . DIRECTORY_SEPARATOR;
+        $enumNameSpace = Helper::getParentPath(__NAMESPACE__) . '\\Enum\\';
         foreach ($SourceInfo as $key => $value) {
             $method = 'set' . ucfirst($key);
             if ($value == null || !method_exists($this, $method)) continue;
 
-            $subClass = __CLASS__  . DIRECTORY_SEPARATOR . ucfirst($key);
+            $subClass = __CLASS__  . "\\" . ucfirst($key);
             if (class_exists($subClass)) {
                 $this->$method(new $subClass($value));
                 continue;
             }
 
-            $Enum = (mb_strtolower($key) == 'type') ? $enumNameSpace . "CustomerType" : $enumNameSpace . $key;
+            $Enum = $enumNameSpace . ((mb_strtolower($key) == 'type') ? "CustomerType" : $key);
             if (enum_exists($Enum)) {
                 if ($Enum::tryFrom($value) == null) continue;
                 $this->$method($Enum::tryFrom($value));
