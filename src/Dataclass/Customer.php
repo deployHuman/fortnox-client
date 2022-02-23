@@ -17,70 +17,70 @@ use InvalidArgumentException;
  */
 class Customer
 {
-    public  string $url;
-    public  string $address1;
-    public  string $address2;
-    public  string $city;
-    public  string $country;
-    public  string $comments;
-    public  string $currency;
-    public  string $costCenter;
-    public  string $countryCode = 'SE';
+    public  ?string $url;
+    public  ?string $address1;
+    public  ?string $address2;
+    public  ?string $city;
+    public  ?string $country;
+    public  ?string $comments;
+    public  ?string $currency;
+    public  ?string $costCenter;
+    public  ?string $countryCode = 'SE';
     public  bool $active;
-    public  string $customerNumber;
+    public  ?string $customerNumber;
     public  DefaultDeliveryTypes $DefaultDeliveryTypes;
     public  DefaultTemplates $DefaultTemplates;
-    public  string $deliveryAddress1;
-    public  string $deliveryAddress2;
-    public  string $deliveryCity;
-    public  string $deliveryCountry;
-    public  string $deliveryCountryCode;
-    public  string $deliveryFax;
-    public  string $deliveryName;
-    public  string $deliveryPhone1;
-    public  string $deliveryPhone2;
-    public  string $deliveryZipCode;
-    public  string $email;
-    public  string $emailInvoice;
-    public  string $emailInvoiceBCC;
-    public  string $emailInvoiceCC;
-    public  string $emailOffer;
-    public  string $emailOfferBCC;
-    public  string $emailOfferCC;
-    public  string $emailOrder;
-    public  string $emailOrderBCC;
-    public  string $emailOrderCC;
-    public  string $externalReference;
-    public  string $fax;
-    public  string $gln;
-    public  string $glnDelivery;
-    public  string $invoiceAdministrationFee;
-    public  float $invoiceDiscount;
-    public  string $invoiceFreight;
-    public  string $invoiceRemark;
-    public  string $name;
-    public  string $organisationNumber;
-    public  string $ourReference;
-    public  string $phone1;
-    public  string $phone2;
-    public  string $priceList;
-    public  string $project;
-    public  string $salesAccount;
-    public  bool $showPriceVATIncluded;
-    public  string $termsOfDelivery;
-    public  string $termsOfPayment;
+    public  ?string $deliveryAddress1;
+    public  ?string $deliveryAddress2;
+    public  ?string $deliveryCity;
+    public  ?string $deliveryCountry;
+    public  ?string $deliveryCountryCode;
+    public  ?string $deliveryFax;
+    public  ?string $deliveryName;
+    public  ?string $deliveryPhone1;
+    public  ?string $deliveryPhone2;
+    public  ?string $deliveryZipCode;
+    public  ?string $email;
+    public  ?string $emailInvoice;
+    public  ?string $emailInvoiceBCC;
+    public  ?string $emailInvoiceCC;
+    public  ?string $emailOffer;
+    public  ?string $emailOfferBCC;
+    public  ?string $emailOfferCC;
+    public  ?string $emailOrder;
+    public  ?string $emailOrderBCC;
+    public  ?string $emailOrderCC;
+    public  ?string $externalReference;
+    public  ?string $fax;
+    public  ?string $gln;
+    public  ?string $glnDelivery;
+    public  ?string $invoiceAdministrationFee;
+    public  ?float $invoiceDiscount;
+    public  ?string $invoiceFreight;
+    public  ?string $invoiceRemark;
+    public  ?string $name;
+    public  ?string $organisationNumber;
+    public  ?string $ourReference;
+    public  ?string $phone1;
+    public  ?string $phone2;
+    public  ?string $priceList;
+    public  ?string $project;
+    public  ?string $salesAccount;
+    public  bool $ShowPriceVATIncluded;
+    public  ?string $termsOfDelivery;
+    public  ?string $termsOfPayment;
     public  CustomerType $type;
-    public  string $vatNumber;
+    public  ?string $vatNumber;
     public  VATType $VATType;
-    public  string $visitingAddress;
-    public  string $visitingCity;
-    public  string $visitingCountry;
-    public  string $visitingCountryCode;
-    public  string $visitingZipCode;
-    public  string $wayOfDelivery;
-    public  string $www;
-    public  string $yourReference;
-    public  string $zipCode;
+    public  ?string $visitingAddress;
+    public  ?string $visitingCity;
+    public  ?string $visitingCountry;
+    public  ?string $visitingCountryCode;
+    public  ?string $visitingZipCode;
+    public  ?string $wayOfDelivery;
+    public  ?string $www;
+    public  ?string $yourReference;
+    public  ?string $zipCode;
 
 
     public function __construct(array|self $preHydratedData = [])
@@ -88,13 +88,13 @@ class Customer
         $this->hydrate($preHydratedData);
     }
 
-    public function setUrl(string $url): self
+    public function setUrl(?string $url): self
     {
         $this->url = $url;
         return $this;
     }
 
-    public function setAddress1(string $address1): self
+    public function setAddress1(?string $address1): self
     {
         if (mb_strlen($address1) > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
@@ -103,16 +103,16 @@ class Customer
         return $this;
     }
 
-    public function setAddress2(string $address2): self
+    public function setAddress2(?string $address2): self
     {
-        if (mb_strlen($address2) > 1024) {
+        if (mb_strlen($address2 ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->address2 = $address2;
         return $this;
     }
 
-    public function setCity(string $city): self
+    public function setCity(?string $city): self
     {
         if (mb_strlen($city) > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
@@ -121,22 +121,22 @@ class Customer
         return $this;
     }
 
-    public function setCountry(string $country): self
+    public function setCountry(?string $country): self
     {
         $this->country = $country;
         return $this;
     }
 
-    public function setComments(string $comments): self
+    public function setComments(?string $comments): self
     {
-        if (mb_strlen($comments) > 1024) {
+        if (mb_strlen($comments ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->comments = $comments;
         return $this;
     }
 
-    public function setCurrency(string $currency): self
+    public function setCurrency(?string $currency): self
     {
         if (mb_strlen($currency) != 3) {
             throw new InvalidArgumentException("Invalid length, length Must be 3", 400);
@@ -145,13 +145,13 @@ class Customer
         return $this;
     }
 
-    public function setCostCenter(string $costCenter): self
+    public function setCostCenter(?string $costCenter): self
     {
         $this->costCenter = $costCenter;
         return $this;
     }
 
-    public function setCountryCode(string $countryCode): self
+    public function setCountryCode(?string $countryCode): self
     {
         if (mb_strlen($countryCode) != 2) {
             throw new InvalidArgumentException("Invalid length, length Must be 2", 400);
@@ -166,7 +166,7 @@ class Customer
         return $this;
     }
 
-    public function setCustomerNumber(string $customerNumber): self
+    public function setCustomerNumber(?string $customerNumber): self
     {
         if (mb_strlen($customerNumber) > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
@@ -187,63 +187,63 @@ class Customer
         return $this;
     }
 
-    public function setDeliveryAddress1(string $deliveryAddress1): self
+    public function setDeliveryAddress1(?string $deliveryAddress1): self
     {
-        if (mb_strlen($deliveryAddress1) > 1024) {
+        if (mb_strlen($deliveryAddress1 ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->deliveryAddress1 = $deliveryAddress1;
         return $this;
     }
 
-    public function setDeliveryAddress2(string $deliveryAddress2): self
+    public function setDeliveryAddress2(?string $deliveryAddress2): self
     {
-        if (mb_strlen($deliveryAddress2) > 1024) {
+        if (mb_strlen($deliveryAddress2 ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->deliveryAddress2 = $deliveryAddress2;
         return $this;
     }
 
-    public function setDeliveryCity(string $deliveryCity): self
+    public function setDeliveryCity(?string $deliveryCity): self
     {
-        if (mb_strlen($deliveryCity) > 1024) {
+        if (mb_strlen($deliveryCity ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->deliveryCity = $deliveryCity;
         return $this;
     }
 
-    public function setDeliveryCountry(string $deliveryCountry): self
+    public function setDeliveryCountry(?string $deliveryCountry): self
     {
-        if (mb_strlen($deliveryCountry) > 1024) {
+        if (mb_strlen($deliveryCountry ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->deliveryCountry = $deliveryCountry;
         return $this;
     }
 
-    public function setDeliveryCountryCode(string $deliveryCountryCode): self
+    public function setDeliveryCountryCode(?string $deliveryCountryCode): self
     {
-        if (mb_strlen($deliveryCountryCode) != 2) {
+        if ($deliveryCountryCode !== null && mb_strlen($deliveryCountryCode) != 2) {
             throw new InvalidArgumentException("Invalid length, length Must be 2", 400);
         }
         $this->deliveryCountryCode = $deliveryCountryCode;
         return $this;
     }
 
-    public function setDeliveryFax(string $deliveryFax): self
+    public function setDeliveryFax(?string $deliveryFax): self
     {
-        if (mb_strlen($deliveryFax) > 1024) {
+        if (mb_strlen($deliveryFax ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->deliveryFax = $deliveryFax;
         return $this;
     }
 
-    public function setDeliveryName(string $deliveryName): self
+    public function setDeliveryName(?string $deliveryName): self
     {
-        if (mb_strlen($deliveryName) > 1024) {
+        if (mb_strlen($deliveryName ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
 
@@ -251,196 +251,196 @@ class Customer
         return $this;
     }
 
-    public function setDeliveryPhone1(string $deliveryPhone1): self
+    public function setDeliveryPhone1(?string $deliveryPhone1): self
     {
-        if (mb_strlen($deliveryPhone1) > 1024) {
+        if (mb_strlen($deliveryPhone1 ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->deliveryPhone1 = $deliveryPhone1;
         return $this;
     }
 
-    public function setDeliveryPhone2(string $deliveryPhone2): self
+    public function setDeliveryPhone2(?string $deliveryPhone2): self
     {
-        if (mb_strlen($deliveryPhone2) > 1024) {
+        if (mb_strlen($deliveryPhone2 ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->deliveryPhone2 = $deliveryPhone2;
         return $this;
     }
 
-    public function setDeliveryZipCode(string $deliveryZipCode): self
+    public function setDeliveryZipCode(?string $deliveryZipCode): self
     {
-        if (mb_strlen($deliveryZipCode) > 10) {
+        if (mb_strlen($deliveryZipCode ?? '') > 10) {
             throw new InvalidArgumentException("Invalid length, maximum length is 10", 400);
         }
         $this->deliveryZipCode = $deliveryZipCode;
         return $this;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): self
     {
-        if (mb_strlen($email) > 1024) {
+        if (mb_strlen($email ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->email = $email;
         return $this;
     }
 
-    public function setEmailInvoice(string $emailInvoice): self
+    public function setEmailInvoice(?string $emailInvoice): self
     {
-        if (mb_strlen($emailInvoice) > 1024) {
+        if (mb_strlen($emailInvoice ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->emailInvoice = $emailInvoice;
         return $this;
     }
 
-    public function setEmailInvoiceBCC(string $emailInvoiceBCC): self
+    public function setEmailInvoiceBCC(?string $emailInvoiceBCC): self
     {
-        if (mb_strlen($emailInvoiceBCC) > 1024) {
+        if (mb_strlen($emailInvoiceBCC ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->emailInvoiceBCC = $emailInvoiceBCC;
         return $this;
     }
 
-    public function setEmailInvoiceCC(string $emailInvoiceCC): self
+    public function setEmailInvoiceCC(?string $emailInvoiceCC): self
     {
-        if (mb_strlen($emailInvoiceCC) > 1024) {
+        if (mb_strlen($emailInvoiceCC ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->emailInvoiceCC = $emailInvoiceCC;
         return $this;
     }
 
-    public function setEmailOffer(string $emailOffer): self
+    public function setEmailOffer(?string $emailOffer): self
     {
-        if (mb_strlen($emailOffer) > 1024) {
+        if (mb_strlen($emailOffer ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->emailOffer = $emailOffer;
         return $this;
     }
 
-    public function setEmailOfferBCC(string $emailOfferBCC): self
+    public function setEmailOfferBCC(?string $emailOfferBCC): self
     {
-        if (mb_strlen($emailOfferBCC) > 1024) {
+        if (mb_strlen($emailOfferBCC ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->emailOfferBCC = $emailOfferBCC;
         return $this;
     }
 
-    public function setEmailOfferCC(string $emailOfferCC): self
+    public function setEmailOfferCC(?string $emailOfferCC): self
     {
-        if (mb_strlen($emailOfferCC) > 1024) {
+        if (mb_strlen($emailOfferCC ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->emailOfferCC = $emailOfferCC;
         return $this;
     }
 
-    public function setEmailOrder(string $emailOrder): self
+    public function setEmailOrder(?string $emailOrder): self
     {
-        if (mb_strlen($emailOrder) > 1024) {
+        if (mb_strlen($emailOrder ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->emailOrder = $emailOrder;
         return $this;
     }
 
-    public function setEmailOrderBCC(string $emailOrderBCC): self
+    public function setEmailOrderBCC(?string $emailOrderBCC): self
     {
-        if (mb_strlen($emailOrderBCC) > 1024) {
+        if (mb_strlen($emailOrderBCC ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->emailOrderBCC = $emailOrderBCC;
         return $this;
     }
 
-    public function setEmailOrderCC(string $emailOrderCC): self
+    public function setEmailOrderCC(?string $emailOrderCC): self
     {
-        if (mb_strlen($emailOrderCC) > 1024) {
+        if (mb_strlen($emailOrderCC ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->emailOrderCC = $emailOrderCC;
         return $this;
     }
 
-    public function setExternalReference(string $externalReference): self
+    public function setExternalReference(?string $externalReference): self
     {
-        if (mb_strlen($externalReference) > 1024) {
+        if (mb_strlen($externalReference ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->externalReference = $externalReference;
         return $this;
     }
 
-    public function setFax(string $fax): self
+    public function setFax(?string $fax): self
     {
-        if (mb_strlen($fax) > 1024) {
+        if (mb_strlen($fax ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->fax = $fax;
         return $this;
     }
 
-    public function setGLN(string $GLN): self
+    public function setGLN(?string $GLN): self
     {
-        if (mb_strlen($GLN) != 13) {
+        if ($GLN !== null && mb_strlen($GLN) != 13) {
             throw new InvalidArgumentException("Invalid length, length Must be 13", 400);
         }
         $this->GLN = $GLN;
         return $this;
     }
 
-    public function setGLNDelivery(string $GLNDelivery): self
+    public function setGLNDelivery(?string $GLNDelivery): self
     {
-        if (mb_strlen($GLNDelivery) != 13) {
+        if ($GLNDelivery !== null && mb_strlen($GLNDelivery) != 13) {
             throw new InvalidArgumentException("Invalid length, length Must be 13", 400);
         }
         $this->GLNDelivery = $GLNDelivery;
         return $this;
     }
 
-    public function setInvoiceAdministrationFee(string $invoiceAdministrationFee): self
+    public function setInvoiceAdministrationFee(?string $invoiceAdministrationFee): self
     {
         $this->invoiceAdministrationFee = $invoiceAdministrationFee;
         return $this;
     }
 
-    public function setInvoiceDiscount(float $invoiceDiscount): self
+    public function setInvoiceDiscount(?float $invoiceDiscount): self
     {
         $this->invoiceDiscount = $invoiceDiscount;
         return $this;
     }
 
-    public function setInvoiceFreight(string $invoiceFreight): self
+    public function setInvoiceFreight(?string $invoiceFreight): self
     {
         $this->invoiceFreight = $invoiceFreight;
         return $this;
     }
 
-    public function setInvoiceRemark(string $invoiceRemark): self
+    public function setInvoiceRemark(?string $invoiceRemark): self
     {
-        if (mb_strlen($invoiceRemark) > 1024) {
+        if (mb_strlen($invoiceRemark ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->invoiceRemark = $invoiceRemark;
         return $this;
     }
 
-    public function setName(string $name): self
+    public function setName(?string $name): self
     {
-        if (mb_strlen($name) > 1024) {
+        if (mb_strlen($name ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->name = $name;
         return $this;
     }
 
-    public function setOrganisationNumber(string $organisationNumber): self
+    public function setOrganisationNumber(?string $organisationNumber): self
     {
         $this->organisationNumber = $organisationNumber;
         if (!isset($this->customerNumber)) {
@@ -449,68 +449,68 @@ class Customer
         return $this;
     }
 
-    public function setOurReference(string $ourReference): self
+    public function setOurReference(?string $ourReference): self
     {
-        if (mb_strlen($ourReference) > 50) {
+        if (mb_strlen($ourReference ?? '') > 50) {
             throw new InvalidArgumentException("Invalid length, maximum length is 50.", 400);
         }
         $this->ourReference = $ourReference;
         return $this;
     }
 
-    public function setPhone1(string $phone1): self
+    public function setPhone1(?string $phone1): self
     {
-        if (mb_strlen($phone1) > 1024) {
+        if (mb_strlen($phone1 ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->phone1 = $phone1;
         return $this;
     }
 
-    public function setPhone2(string $phone2): self
+    public function setPhone2(?string $phone2): self
     {
-        if (mb_strlen($phone2) > 1024) {
+        if (mb_strlen($phone2 ?? '') > 1024) {
             throw new InvalidArgumentException("Invalid length, maximum length is 1024.", 400);
         }
         $this->phone2 = $phone2;
         return $this;
     }
 
-    public function setPriceList(string $priceList): self
+    public function setPriceList(?string $priceList): self
     {
         $this->priceList = $priceList;
         return $this;
     }
 
 
-    public function setProject(string $project): self
+    public function setProject(?string $project): self
     {
         $this->project = $project;
         return $this;
     }
 
-    public function setSalesAccount(string $salesAccount): self
+    public function setSalesAccount(?string $salesAccount): self
     {
-        if (mb_strlen($salesAccount) != 4) {
+        if ($salesAccount !== null && mb_strlen($salesAccount) != 4) {
             throw new InvalidArgumentException("Invalid length, length Must be 4", 400);
         }
         $this->salesAccount = $salesAccount;
         return $this;
     }
 
-    public function setShowPriceVATIncluded(bool $showPriceVATIncluded): self
+    public function setShowPriceVATIncluded(bool $ShowPriceVATIncluded): self
     {
-        $this->showPriceVATIncluded = $showPriceVATIncluded;
+        $this->ShowPriceVATIncluded = $ShowPriceVATIncluded;
         return $this;
     }
 
-    public function setTermsOfDelivery(string $termsOfDelivery): self
+    public function setTermsOfDelivery(?string $termsOfDelivery): self
     {
         $this->termsOfDelivery = $termsOfDelivery;
         return $this;
     }
 
-    public function setTermsOfPayment(string $termsOfPayment): self
+    public function setTermsOfPayment(?string $termsOfPayment): self
     {
         $this->termsOfPayment = $termsOfPayment;
         return $this;
@@ -522,7 +522,7 @@ class Customer
         return $this;
     }
 
-    public function setVATNumber(string $VATNumber): self
+    public function setVATNumber(?string $VATNumber): self
     {
         $this->VATNumber = $VATNumber;
         return $this;
@@ -534,58 +534,58 @@ class Customer
         return $this;
     }
 
-    public function setVisitingAddress(string $visitingAddress): self
+    public function setVisitingAddress(?string $visitingAddress): self
     {
-        if (mb_strlen($visitingAddress) > 128) {
+        if (mb_strlen($visitingAddress ?? '') > 128) {
             throw new InvalidArgumentException("Invalid length, maximum length is 128.", 400);
         }
         $this->visitingAddress = $visitingAddress;
         return $this;
     }
 
-    public function setVisitingCity(string $visitingCity): self
+    public function setVisitingCity(?string $visitingCity): self
     {
-        if (mb_strlen($visitingCity) > 128) {
+        if (mb_strlen($visitingCity ?? '') > 128) {
             throw new InvalidArgumentException("Invalid length, maximum length is 128.", 400);
         }
         $this->visitingCity = $visitingCity;
         return $this;
     }
 
-    public function setVisitingCountry(string $visitingCountry): self
+    public function setVisitingCountry(?string $visitingCountry): self
     {
-        if (mb_strlen($visitingCountry) > 128) {
+        if (mb_strlen($visitingCountry ?? '') > 128) {
             throw new InvalidArgumentException("Invalid length, maximum length is 128.", 400);
         }
         $this->visitingCountry = $visitingCountry;
         return $this;
     }
 
-    public function setVisitingCountryCode(string $visitingCountryCode): self
+    public function setVisitingCountryCode(?string $visitingCountryCode): self
     {
-        if (mb_strlen($visitingCountryCode) != 2) {
+        if ($visitingCountryCode !== null && mb_strlen($visitingCountryCode) != 2) {
             throw new InvalidArgumentException("Invalid length, length Must be 2", 400);
         }
         $this->visitingCountryCode = $visitingCountryCode;
         return $this;
     }
 
-    public function setVisitingZipCode(string $visitingZipCode): self
+    public function setVisitingZipCode(?string $visitingZipCode): self
     {
-        if (mb_strlen($visitingZipCode) > 10) {
+        if (mb_strlen($visitingZipCode ?? '') > 10) {
             throw new InvalidArgumentException("Invalid length, maximum length is 10.", 400);
         }
         $this->visitingZipCode = $visitingZipCode;
         return $this;
     }
 
-    public function setWayOfDelivery(string $wayOfDelivery): self
+    public function setWayOfDelivery(?string $wayOfDelivery): self
     {
         $this->wayOfDelivery = $wayOfDelivery;
         return $this;
     }
 
-    public function setWWW(string $WWW): self
+    public function setWWW(?string $WWW): self
     {
         if (mb_strlen($WWW) > 128) {
             throw new InvalidArgumentException("Invalid length, maximum length is 128.", 400);
@@ -594,7 +594,7 @@ class Customer
         return $this;
     }
 
-    public function setYourReference(string $yourReference): self
+    public function setYourReference(?string $yourReference): self
     {
         if (mb_strlen($yourReference) > 50) {
             throw new InvalidArgumentException("Invalid length, maximum length is 50.", 400);
@@ -603,7 +603,7 @@ class Customer
         return $this;
     }
 
-    public function setZipCode(string $zipCode): self
+    public function setZipCode(?string $zipCode): self
     {
         if (mb_strlen($zipCode) > 10) {
             throw new InvalidArgumentException("Invalid length, maximum length is 10.", 400);
@@ -638,7 +638,7 @@ class Customer
         $enumNameSpace = Helper::getParentPath(__NAMESPACE__) . '\\Enum\\';
         foreach ($SourceInfo as $key => $value) {
             $method = 'set' . ucfirst($key);
-            if ($value == null || !method_exists($this, $method)) continue;
+            if (($value == null && $value != false) || !method_exists($this, $method)) continue;
 
             $subClass = __CLASS__  . "\\" . ucfirst($key);
             if (class_exists($subClass)) {
@@ -670,7 +670,7 @@ class Customer
     {
         $returnarray = [];
         foreach ($this as $key => $value) {
-            if ($value == null || $value == "") continue;
+            //if (($value == null || $value == "") && $value != false) continue;
             if ($value instanceof CustomerType || $value instanceof VATType) {
                 $returnarray[ucfirst($key)] = $value->value;
                 continue;
