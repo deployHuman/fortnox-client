@@ -20,7 +20,7 @@ class Configuration
     protected string $userAgent = 'DeployHuman/fortnox-PHP-Client/1.0.0';
     protected string $tempFolderPath;
     protected string $storage_Default_name = 'fortnox_auth';
-    protected string $storage_name;
+    protected string $storage_name = 'fortnox_auth';
     protected array $storage;
     protected bool $debug = false;
     protected logger $logstack;
