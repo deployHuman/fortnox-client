@@ -56,18 +56,16 @@ class ApiClient
      */
     protected function request(ApiMethod $method = ApiMethod::GET, string $uri = '', array $data = [], array $params = []): Response
     {
-        $logclient = $this->config->getLogger();
-        $logclient->debug(__CLASS__ . "::" . __FUNCTION__);
+        $optionsarray = [];
+        if (!empty($params)) $optionsarray[] = [RequestOptions::QUERY => $params];
+        if (!empty($data)) $optionsarray[] = [RequestOptions::JSON => $data];
+        $optionsarray[] = [RequestOptions::HEADERS => ['Authorization' => 'Bearer ' . ($this->config->getStorage()['access_token'] ?? '')]];
 
-        $response = $this->getClient()->request($method->value, $uri, [
-            RequestOptions::JSON    => $data,
-            RequestOptions::QUERY   => $params,
-            RequestOptions::HEADERS => [
-                'Authorization' => 'Bearer ' . ($this->config->getStorage()['access_token'] ?? ''),
-            ],
-        ]);
+        $response = $this->getClient()->request($method->value, $uri, [$optionsarray]);
+
 
         if ($this->config->getDebug()) {
+            $logclient = $this->config->getLogger();
             $logclient->debug(__CLASS__ . "::" . __FUNCTION__ . " - Response body: " . $response->getBody()->getContents());
             $response->getBody()->rewind();
         }
