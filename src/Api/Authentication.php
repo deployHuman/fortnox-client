@@ -70,6 +70,7 @@ class Authentication extends ApiClient
             $response->getBody()->rewind();
         }
         if ($response->getStatusCode() == 200) {
+            $this->config->getLogger()->debug(__CLASS__ . "::" . __FUNCTION__ . " - Got First Tokens");
             $this->config->setAllTokens(json_decode($response->getBody()->getContents(), true));
             $response->getBody()->rewind();
         }
