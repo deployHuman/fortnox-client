@@ -86,9 +86,9 @@ class DefaultDeliveryTypes
     public function toArray(): array
     {
         return [
-            'invoice' => $this->invoice->value,
-            'order' => $this->order->value,
-            'offer' => $this->offer->value,
+            'Invoice' => $this->invoice->value,
+            'Order' => $this->order->value,
+            'Offer' => $this->offer->value,
         ];
     }
 

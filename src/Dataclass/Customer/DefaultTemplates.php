@@ -12,15 +12,6 @@ namespace DeployHuman\fortnox\Dataclass\Customer;
  */
 class DefaultTemplates
 {
-    // CashInvoice	
-    // string
-    // Invoice	
-    // string
-    // Offer	
-    // string
-    // Order	
-    // string
-
 
     protected string $cashInvoice;
     protected string $invoice;
@@ -107,10 +98,10 @@ class DefaultTemplates
     public function toArray(): array
     {
         return [
-            'cashInvoice' => $this->cashInvoice,
-            'invoice' => $this->invoice,
-            'offer' => $this->offer,
-            'order' => $this->order,
+            'CashInvoice' => $this->cashInvoice,
+            'Invoice' => $this->invoice,
+            'Offer' => $this->offer,
+            'Order' => $this->order,
         ];
     }
 
