@@ -18,7 +18,6 @@ class Configuration
     protected string $AppID = '';
     protected string $BaseUrl = 'https://apps.fortnox.se';
     protected string $userAgent = 'DeployHuman/fortnox-PHP-Client/1.0.0';
-    protected string $tempFolderPath;
     protected string $storage_Default_name = 'fortnox_auth';
     protected string $storage_name = 'fortnox_auth';
     protected array $storage;
@@ -30,7 +29,6 @@ class Configuration
     public function __construct(bool $StorageInSession = true)
     {
         $this->setStorageIsSession($StorageInSession);
-        $this->tempFolderPath = sys_get_temp_dir();
     }
 
     /**
