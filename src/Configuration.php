@@ -280,7 +280,7 @@ class Configuration
 
     public function setAllTokens(array $authBody): self
     {
-        if (!isset($authBody['expires_in'])) $authBody['expires_in'] = 0;
+        if (!isset($authBody['expires_in'])) $authBody['expires_in'] = 3600;
         $this->saveToStorage(
             [
                 'expires_in' => $authBody['expires_in'],
