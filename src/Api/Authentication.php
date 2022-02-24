@@ -42,7 +42,6 @@ class Authentication extends ApiClient
     public function callAPIExchangeCodeForTokens(string $code): Response|false
     {
         $logclient = $this->config->getLogger();
-        $logclient->debug(__CLASS__ . "::" . __FUNCTION__);
         $client = $this->getClient();
         try {
             $response = $client->request(
@@ -94,7 +93,6 @@ class Authentication extends ApiClient
             $logclient->error(__CLASS__ . "::" . __FUNCTION__ . " - No refresh token found.");
             return false;
         }
-        $logclient->debug(__CLASS__ . "::" . __FUNCTION__);
         $client = $this->getClient();
         try {
             $response = $client->request(
@@ -125,6 +123,53 @@ class Authentication extends ApiClient
             $this->config->setAllTokens(json_decode($response->getBody()->getContents(), true));
             $response->getBody()->rewind();
         }
+        return $response;
+    }
+
+    /**
+     * Revoke Refresh-token.
+     * Revoke of access-token is not supported for Authorization Code Flow due to their short lifespan.
+     * Instead, the revoke is done on the refresh-token to prevent new access-tokens from being created. Revoke of a refresh-token is done like this:
+     * 
+     * @param string $refresh_token The refresh token received from the Fortnox API earlier.
+     * @return response
+     * @documentation https://developer.fortnox.se/general/authentication/
+     */
+    public function callAPIRevokeRefreshtoken(string $refresh_token = null): Response|false
+    {
+        $logclient = $this->config->getLogger();
+        if ($refresh_token == null) $refresh_token = $this->config->getRefresh_token();
+        if ($refresh_token == null) {
+            $logclient->error(__CLASS__ . "::" . __FUNCTION__ . " - No refresh token found.");
+            return false;
+        }
+        $client = $this->getClient();
+        try {
+            $response = $client->request(
+                "POST",
+                '/oauth-v1/revoke',
+                [
+                    'form_params' => [
+                        'token_type_hint' => 'refresh_token',
+                        'token' => $refresh_token
+                    ],
+                    'auth' => [
+                        $this->config->getClient_id(),
+                        $this->config->getClient_secret()
+                    ]
+                ]
+            );
+        } catch (ClientException $e) {
+            $SentRequest = $e->getRequest() ? Message::toString($e->getRequest()) : '';
+            $desc = $e->hasResponse() ? Message::toString($e->getResponse()) : '';
+            $logclient->error(__CLASS__ . "::" . __FUNCTION__ . " - ClientException: " . $e->getMessage() . ' Request: ' . $SentRequest . ' Description: ' . $desc);
+            return false;
+        }
+        if ($this->config->getDebug()) {
+            $logclient->debug(__CLASS__ . "::" . __FUNCTION__ . " - Response body: " . $response->getBody()->getContents());
+            $response->getBody()->rewind();
+        }
+        if ($response->getStatusCode() == 200) $this->config->resetAllTokens();
         return $response;
     }
 }

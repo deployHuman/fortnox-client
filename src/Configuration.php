@@ -381,4 +381,9 @@ class Configuration
     {
         $this->unsetFromStorage(['access_token', 'expires_at', 'scope', 'token_type', 'expires_in']);
     }
+
+    public function resetAllTokens()
+    {
+        $this->unsetFromStorage(['refresh_token', 'access_token', 'expires_at', 'scope', 'token_type', 'expires_in']);
+    }
 }
