@@ -8,7 +8,6 @@ use DeployHuman\fortnox\Enum\ApiMethod;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\RequestOptions;
-use Monolog\ErrorHandler;
 use Monolog\Registry;
 
 class ApiClient
@@ -24,7 +23,6 @@ class ApiClient
         }
 
         Registry::addLogger($this->config->getLogger(), __CLASS__, true);
-        ErrorHandler::register($this->config->getLogger());
 
         $this->client = new Client([
             "base_uri" => $this->config->getBaseUrl(),
@@ -60,19 +58,13 @@ class ApiClient
             $this->config->getLogger()->error("No access token found in storage.");
             return new Response(401, [], '{"error":"Missing access token"}');
         }
+
         $optionsarray = [];
         if (!empty($params)) $optionsarray[RequestOptions::QUERY] = $params;
         if (!empty($data))  $optionsarray[RequestOptions::JSON] = $data;
         $optionsarray[RequestOptions::HEADERS] = ['Authorization' => 'Bearer ' . $this->config->getStorage()['access_token']];
 
-        $response = $this->getClient()->request($method->value, $uri, $optionsarray);
-
-        if ($this->config->getDebug()) {
-            $this->config->getLogger()->debug(__CLASS__ . "::" . __FUNCTION__ . " - Response body: " . $response->getBody()->getContents());
-            $response->getBody()->rewind();
-        }
-
-        return $response;
+        return $this->getClient()->request($method->value, $uri, $optionsarray);
     }
 
     /**

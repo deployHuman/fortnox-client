@@ -43,7 +43,6 @@ class Configuration
         if (empty($this->logstack)) {
             $logger = new Logger(__CLASS__);
             $logger->pushHandler(new StreamHandler($this->getLogPath() . DIRECTORY_SEPARATOR . 'api.log', Logger::DEBUG));
-            $logger->pushHandler(new FirePHPHandler());
             $this->logstack = $logger;
         }
     }
@@ -364,17 +363,6 @@ class Configuration
             return $auth['baseurl'] === $this->getBaseUrl();
         }
         return false;
-    }
-
-    protected function basicTokenCheck(string $ScopeNeeded = null): bool|Exception
-    {
-        if (!$this->isClientAuthSet()) {
-            throw new Exception("Error in Fortnox Settings");
-        }
-        if ($ScopeNeeded != null && !$this->hasScope($ScopeNeeded)) {
-            throw new Exception("Error in fetching Access Token for basic APi CALL on Fortnox");
-        }
-        return true;
     }
 
     public function resetAccesToken()

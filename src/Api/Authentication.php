@@ -4,10 +4,7 @@ namespace DeployHuman\fortnox\Api;
 
 use DeployHuman\fortnox\ApiClient;
 use DeployHuman\fortnox\Dataclass\scopes;
-use DeployHuman\fortnox\Exception;
 use DeployHuman\fortnox\Helper;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Psr7\Response;
 
 class Authentication extends ApiClient
@@ -41,33 +38,23 @@ class Authentication extends ApiClient
      */
     public function callAPIExchangeCodeForTokens(string $code): Response|false
     {
-        $logclient = $this->config->getLogger();
+        if (!$this->config->isClientAuthSet()) return false;
+
         $client = $this->getClient();
-        try {
-            $response = $client->request(
-                "POST",
-                '/oauth-v1/token',
-                [
-                    'form_params' => [
-                        'grant_type' => 'authorization_code',
-                        'code' => $code
-                    ],
-                    'auth' => [
-                        $this->config->getClient_id(),
-                        $this->config->getClient_secret()
-                    ]
+        $response = $client->request(
+            "POST",
+            '/oauth-v1/token',
+            [
+                'form_params' => [
+                    'grant_type' => 'authorization_code',
+                    'code' => $code
+                ],
+                'auth' => [
+                    $this->config->getClient_id(),
+                    $this->config->getClient_secret()
                 ]
-            );
-        } catch (ClientException $e) {
-            $SentRequest = $e->getRequest() ? Message::toString($e->getRequest()) : '';
-            $desc = $e->hasResponse() ? Message::toString($e->getResponse()) : '';
-            $logclient->error(__CLASS__ . "::" . __FUNCTION__ . " - ClientException: " . $e->getMessage() . ' Request: ' . $SentRequest . ' Description: ' . $desc);
-            return false;
-        }
-        if ($this->config->getDebug()) {
-            $logclient->debug(__CLASS__ . "::" . __FUNCTION__ . " - Response body: " . $response->getBody()->getContents());
-            $response->getBody()->rewind();
-        }
+            ]
+        );
         if ($response->getStatusCode() == 200) {
             $this->config->getLogger()->debug(__CLASS__ . "::" . __FUNCTION__ . " - Got First Tokens");
             $this->config->setAllTokens(json_decode($response->getBody()->getContents(), true));
@@ -87,39 +74,29 @@ class Authentication extends ApiClient
      */
     public function callAPIRefreshAccessToken(string $refresh_token = null): Response|false
     {
-        $logclient = $this->config->getLogger();
+        if (!$this->config->isClientAuthSet()) return false;
         if ($refresh_token == null) $refresh_token = $this->config->getRefresh_token();
         if ($refresh_token == null) {
-            $logclient->error(__CLASS__ . "::" . __FUNCTION__ . " - No refresh token found.");
+            $this->config->getLogger()->error(__CLASS__ . "::" . __FUNCTION__ . " - No refresh token found.");
             return false;
         }
         $client = $this->getClient();
-        try {
-            $response = $client->request(
-                "POST",
-                '/oauth-v1/token',
-                [
-                    'form_params' => [
-                        'grant_type' => 'refresh_token',
-                        'refresh_token' => $refresh_token
-                    ],
-                    'auth' => [
-                        $this->config->getClient_id(),
-                        $this->config->getClient_secret()
-                    ]
+        $response = $client->request(
+            "POST",
+            '/oauth-v1/token',
+            [
+                'form_params' => [
+                    'grant_type' => 'refresh_token',
+                    'refresh_token' => $refresh_token
+                ],
+                'auth' => [
+                    $this->config->getClient_id(),
+                    $this->config->getClient_secret()
                 ]
-            );
-        } catch (ClientException $e) {
-            $SentRequest = $e->getRequest() ? Message::toString($e->getRequest()) : '';
-            $desc = $e->hasResponse() ? Message::toString($e->getResponse()) : '';
-            $logclient->error(__CLASS__ . "::" . __FUNCTION__ . " - ClientException: " . $e->getMessage() . ' Request: ' . $SentRequest . ' Description: ' . $desc);
-            return false;
-        }
-        if ($this->config->getDebug()) {
-            $logclient->debug(__CLASS__ . "::" . __FUNCTION__ . " - Response body: " . $response->getBody()->getContents());
-            $response->getBody()->rewind();
-        }
+            ]
+        );
         if ($response->getStatusCode() == 200) {
+            $this->config->getLogger()->debug(__CLASS__ . "::" . __FUNCTION__ . " - Got refreshed tokens");
             $this->config->setAllTokens(json_decode($response->getBody()->getContents(), true));
             $response->getBody()->rewind();
         }
@@ -137,38 +114,27 @@ class Authentication extends ApiClient
      */
     public function callAPIRevokeRefreshtoken(string $refresh_token = null): Response|false
     {
-        $logclient = $this->config->getLogger();
+        if (!$this->config->isClientAuthSet()) return false;
         if ($refresh_token == null) $refresh_token = $this->config->getRefresh_token();
         if ($refresh_token == null) {
-            $logclient->error(__CLASS__ . "::" . __FUNCTION__ . " - No refresh token found.");
+            $this->config->getLogger()->error(__CLASS__ . "::" . __FUNCTION__ . " - No refresh token found.");
             return false;
         }
         $client = $this->getClient();
-        try {
-            $response = $client->request(
-                "POST",
-                '/oauth-v1/revoke',
-                [
-                    'form_params' => [
-                        'token_type_hint' => 'refresh_token',
-                        'token' => $refresh_token
-                    ],
-                    'auth' => [
-                        $this->config->getClient_id(),
-                        $this->config->getClient_secret()
-                    ]
+        $response = $client->request(
+            "POST",
+            '/oauth-v1/revoke',
+            [
+                'form_params' => [
+                    'token_type_hint' => 'refresh_token',
+                    'token' => $refresh_token
+                ],
+                'auth' => [
+                    $this->config->getClient_id(),
+                    $this->config->getClient_secret()
                 ]
-            );
-        } catch (ClientException $e) {
-            $SentRequest = $e->getRequest() ? Message::toString($e->getRequest()) : '';
-            $desc = $e->hasResponse() ? Message::toString($e->getResponse()) : '';
-            $logclient->error(__CLASS__ . "::" . __FUNCTION__ . " - ClientException: " . $e->getMessage() . ' Request: ' . $SentRequest . ' Description: ' . $desc);
-            return false;
-        }
-        if ($this->config->getDebug()) {
-            $logclient->debug(__CLASS__ . "::" . __FUNCTION__ . " - Response body: " . $response->getBody()->getContents());
-            $response->getBody()->rewind();
-        }
+            ]
+        );
         if ($response->getStatusCode() == 200) $this->config->resetAllTokens();
         return $response;
     }
