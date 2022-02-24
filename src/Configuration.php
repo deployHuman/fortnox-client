@@ -7,7 +7,6 @@ use DateTime;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Middleware;
-use Monolog\Handler\FirePHPHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
@@ -59,13 +58,13 @@ class Configuration
 
     public function getDebugHandler(): ?HandlerStack
     {
-        if (!$this->getDebug())  return null;
-        $this->checkLogstack();
+        $level = $this->getDebug() ? Logger::DEBUG : Logger::WARNING;
         $stack = HandlerStack::create();
         $stack->push(
             Middleware::log(
-                $this->logstack,
-                new MessageFormatter('{uri} - {code} -  request Headers: {req_headers} - Response Headers {res_headers}')
+                $this->getLogger(),
+                new MessageFormatter('{code}:{method}:{uri}-"{req_body}"'),
+                $level
             )
         );
         return $stack;
