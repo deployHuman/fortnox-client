@@ -306,36 +306,6 @@ class Configuration
         );
     }
 
-    public function hasScope(string $Scope): bool
-    {
-        return true;
-        //Todo Fix this using regex or something
-        $scopeMethod = substr($Scope, 0, strpos($Scope, ':'));
-        $fromright = substr($Scope, strpos($Scope, ':'), strlen($Scope) - strpos($Scope, ':') -  strpos(strrev($Scope), '.'));
-        $scopeUri = substr($Scope, strpos($Scope, ':') + 1,);
-
-        $scopeArray = explode(" ", $this->getStorage()['scope']);
-        foreach ($scopeArray as $key => $value) {
-            $pos = strpos($value, ':');
-            if ($pos === false) {
-                //no : found
-                if ($value == $Scope) {
-                    return true;
-                }
-            } else {
-                //: found
-                $scope = substr($value, 0, $pos);
-                if ($scope == $Scope) {
-                    return true;
-                }
-            }
-        }
-        if (in_array($Scope, $scopeArray)) {
-            return true;
-        }
-        return false;
-    }
-
     public function isTokenValid(): bool
     {
         if ($this->isSameBaseUrl() && !$this->isTokenExpired()) {
