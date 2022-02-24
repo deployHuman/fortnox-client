@@ -61,9 +61,10 @@ class ApiClient
             return new Response(401, [], '{"error":"Missing access token"}');
         }
         $optionsarray = [];
-        if (!empty($params)) $optionsarray  = array_merge($optionsarray, [RequestOptions::QUERY => $params]);
-        if (!empty($data))  $optionsarray  = array_merge($optionsarray, [RequestOptions::JSON => $data]);
-        $optionsarray  = array_merge($optionsarray, [RequestOptions::HEADERS => ['Authorization' => 'Bearer ' . $this->config->getStorage()['access_token']]]);
+        if (!empty($params)) $optionsarray[RequestOptions::QUERY] = $params;
+        if (!empty($data))  $optionsarray[RequestOptions::JSON] = $data;
+        $optionsarray[RequestOptions::HEADERS] = ['Authorization' => 'Bearer ' . $this->config->getStorage()['access_token']];
+
         $response = $this->getClient()->request($method->value, $uri, $optionsarray);
 
         if ($this->config->getDebug()) {
