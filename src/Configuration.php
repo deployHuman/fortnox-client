@@ -270,8 +270,8 @@ class Configuration
 
     public function isClientAuthSet(): bool
     {
-        if (empty($this->Client_id) || empty($this->Client_secret) || empty($this->BaseUrl) || empty($this->AppID) || empty($this->getRefresh_token())) {
-            $this->getLogger()->debug("Client Auth not set, please set Client_id, Client_secret, BaseUrl, AppID and refresh_token");
+        if (empty($this->Client_id) || empty($this->Client_secret) || empty($this->BaseUrl) || empty($this->AppID)) {
+            $this->getLogger()->debug("Client Auth not set, please set Client_id, Client_secret, BaseUrl and  AppID");
             return false;
         }
         return true;
