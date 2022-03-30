@@ -30,8 +30,7 @@ class ApiClient
             'user_agent' => $this->config->getUserAgent(),
             'http_errors' => false,
         ]);
-
-        if (get_called_class() != 'DeployHuman\fortnox\ApiClient')              return;
+        if (get_parent_class() !== false) return;
 
         $this->config->saveToStorage($this->config->getSettingsArray());
     }
