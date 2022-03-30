@@ -291,19 +291,22 @@ class Configuration
                 'expires_at' => (isset($authBody['expires_at']) ? (new DateTime($authBody['expires_at'])) : (new DateTime())->add(new DateInterval('PT' . $authBody['expires_in'] . 'S'))),
             ]
         );
-        $this->setStorageExtraParams();
+        $this->config->saveToStorage($this->config->getSettingsArray());
         return $this;
     }
 
-
-    private function setStorageExtraParams()
+    public function getSettingsArray(): array
     {
-        $this->saveToStorage(
-            [
-                'baseurl' => $this->getBaseUrl(),
-                'debug' => $this->getDebug()
-            ]
-        );
+        return [
+            'Client_id' => $this->getClient_id(),
+            'Client_secret' => $this->getClient_secret(),
+            'BaseUrl' => $this->getBaseUrl(),
+            'UserAgent' => $this->getUserAgent(),
+            'debug' => $this->getDebug(),
+            'StorageName' => $this->getStorageName(),
+            'StorageIsSession' => $this->getStorageIsSession(),
+            'LoggerName' => $this->getLogger()->getName(),
+        ];
     }
 
     public function isTokenValid(): bool
@@ -326,8 +329,8 @@ class Configuration
     protected function isSameBaseUrl(): bool
     {
         $auth = $this->getStorage();
-        if (isset($auth['baseurl'])) {
-            return $auth['baseurl'] === $this->getBaseUrl();
+        if (isset($auth['BaseUrl'])) {
+            return $auth['BaseUrl'] === $this->getBaseUrl();
         }
         return false;
     }
