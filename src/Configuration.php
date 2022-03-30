@@ -291,7 +291,7 @@ class Configuration
                 'expires_at' => (isset($authBody['expires_at']) ? (new DateTime($authBody['expires_at'])) : (new DateTime())->add(new DateInterval('PT' . $authBody['expires_in'] . 'S'))),
             ]
         );
-        $this->config->saveToStorage($this->config->getSettingsArray());
+        $this->saveToStorage($this->getSettingsArray());
         return $this;
     }
 
