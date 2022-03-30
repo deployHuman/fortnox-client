@@ -30,7 +30,7 @@ class ApiClient
             'user_agent' => $this->config->getUserAgent(),
             'http_errors' => false,
         ]);
-        if (get_parent_class() !== false) return;
+        if (get_parent_class($this) !== false) return;
 
         $this->config->saveToStorage($this->config->getSettingsArray());
     }
