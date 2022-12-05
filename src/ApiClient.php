@@ -2,6 +2,7 @@
 
 namespace DeployHuman\fortnox;
 
+use DateTime;
 use DeployHuman\fortnox\Api\Authentication;
 use DeployHuman\fortnox\Api\Fortnox\Fortnox;
 use DeployHuman\fortnox\Enum\ApiMethod;
@@ -28,7 +29,7 @@ class ApiClient
             'base_uri' => $this->config->getBaseUrl(),
             'handler' => $this->config->getDebugHandler(),
             'user_agent' => $this->config->getUserAgent(),
-            'http_errors' => false,
+            'http_errors' => true,
         ]);
         if (get_parent_class($this) !== false) {
             return;
@@ -69,7 +70,7 @@ class ApiClient
         if (! empty($data)) {
             $optionsarray[RequestOptions::JSON] = $data;
         }
-        $optionsarray[RequestOptions::HEADERS] = ['Authorization' => 'Bearer '.$this->config->getStorage()['access_token']];
+        $optionsarray[RequestOptions::HEADERS] = ['Authorization' => 'Bearer '.$this->getAccessToken()];
 
         return $this->getClient()->request($method->value, $uri, $optionsarray);
     }
@@ -189,5 +190,34 @@ class ApiClient
     public function Fortnox(): Fortnox
     {
         return new Fortnox($this->config);
+    }
+
+    protected function getAccessToken(): string|null
+    {
+        return $this->config->getStorage()['access_token'] ?? null;
+    }
+
+    protected function isTokenValid(array $auth): bool
+    {
+        return $this->isSameBaseUrl($auth) && ! $this->isTokenExpired();
+    }
+
+    protected function isTokenExpired(): bool
+    {
+        $auth = $this->config->getStorage();
+        if (isset($auth['expires_at'])) {
+            return $auth['expires_at'] <= (new DateTime());
+        }
+
+        return true;
+    }
+
+    protected function isSameBaseUrl(array $auth): bool
+    {
+        if (! isset($auth['BaseUrl'])) {
+            return false;
+        }
+
+        return $auth['BaseUrl'] == $this->config->getBaseUrl();
     }
 }

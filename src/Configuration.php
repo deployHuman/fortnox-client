@@ -324,6 +324,7 @@ class Configuration
         }
         $this->saveToStorage(
             [
+                'BaseUrl' => $this->getBaseUrl(),
                 'expires_in' => $authBody['expires_in'],
                 'access_token' => $authBody['access_token'] ?? '',
                 'refresh_token' => $authBody['refresh_token'] ?? '',
@@ -336,49 +337,6 @@ class Configuration
         return $this;
     }
 
-    public function getSettingsArray(): array
-    {
-        return [
-            'Client_id' => $this->getClient_id(),
-            'Client_secret' => $this->getClient_secret(),
-            'BaseUrl' => $this->getBaseUrl(),
-            'UserAgent' => $this->getUserAgent(),
-            'debug' => $this->getDebug(),
-            'StorageName' => $this->getStorageName(),
-            'StorageIsSession' => $this->getStorageIsSession(),
-            'LoggerName' => $this->getLogger()->getName(),
-        ];
-    }
-
-    public function isTokenValid(): bool
-    {
-        if ($this->isSameBaseUrl() && ! $this->isTokenExpired()) {
-            return true;
-        }
-
-        return false;
-    }
-
-    protected function isTokenExpired(): bool
-    {
-        $auth = $this->getStorage();
-        if (isset($auth['expires_at'])) {
-            return $auth['expires_at'] <= (new DateTime());
-        }
-
-        return true;
-    }
-
-    protected function isSameBaseUrl(): bool
-    {
-        $auth = $this->getStorage();
-        if (isset($auth['BaseUrl'])) {
-            return $auth['BaseUrl'] == $this->getBaseUrl();
-        }
-
-        return false;
-    }
-
     public function resetAccesToken()
     {
         $this->unsetFromStorage(['access_token', 'expires_at', 'scope', 'token_type', 'expires_in']);
@@ -386,6 +344,7 @@ class Configuration
 
     public function resetAllTokens()
     {
-        $this->unsetFromStorage(['refresh_token', 'access_token', 'expires_at', 'scope', 'token_type', 'expires_in']);
+        $this->resetAccesToken();
+        $this->unsetFromStorage(['refresh_token']);
     }
 }
