@@ -7,7 +7,6 @@ use DeployHuman\tests\TestCase;
 
 final class CustomerTest extends TestCase
 {
-
     private $ValidResponseFromFortnox = '{"Customer":{
         "@url":"https:\/\/api.fortnox.se\/3\/customers\/19991212121212",
         "Address1":"Snöv\u00e4gen 600",
@@ -76,11 +75,11 @@ final class CustomerTest extends TestCase
 
     public function testHydrateFromValidSource(): void
     {
-        $inputArray = json_decode($this->ValidResponseFromFortnox, true)["Customer"];
+        $inputArray = json_decode($this->ValidResponseFromFortnox, true)['Customer'];
         $dataclass = new Customer();
         $dataclass->hydrate($inputArray);
         $toarrayResult = $dataclass->toArray();
-        unset($inputArray["@url"]);
+        unset($inputArray['@url']);
         $this->assertEquals($toarrayResult, $inputArray);
     }
 }

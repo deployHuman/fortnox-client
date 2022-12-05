@@ -2,18 +2,17 @@
 
 namespace DeployHuman\fortnox\Enum;
 
-
 enum ApiMethod: string
 {
-    case GET = "GET";
+    case GET = 'GET';
 
-    case POST = "POST";
+    case POST = 'POST';
 
-    case PUT = "PUT";
+    case PUT = 'PUT';
 
-    case DELETE = "DELETE";
+    case DELETE = 'DELETE';
 
-    case PATCH = "PATCH";
+    case PATCH = 'PATCH';
 
-    case OPTIONS = "OPTIONS";
+    case OPTIONS = 'OPTIONS';
 }

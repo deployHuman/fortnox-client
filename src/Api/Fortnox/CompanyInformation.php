@@ -7,7 +7,6 @@ use GuzzleHttp\Psr7\Response;
 
 class CompanyInformation extends ApiClient
 {
-
     /**
      * Company Information.
      * Retrieve the Company Information

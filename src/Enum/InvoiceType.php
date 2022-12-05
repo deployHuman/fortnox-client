@@ -2,17 +2,15 @@
 
 namespace DeployHuman\fortnox\Enum;
 
-
 enum InvoiceType: string
 {
+    case INVOICE = 'INVOICE';
 
-    case INVOICE = "INVOICE";
+    case AGREEMENTINVOICE = 'AGREEMENTINVOICE';
 
-    case AGREEMENTINVOICE = "AGREEMENTINVOICE";
+    case INTRESTINVOICE = 'INTRESTINVOICE';
 
-    case INTRESTINVOICE = "INTRESTINVOICE";
+    case SUMMARYINVOICE = 'SUMMARYINVOICE';
 
-    case SUMMARYINVOICE = "SUMMARYINVOICE";
-
-    case CASHINVOICE = "CASHINVOICE";
+    case CASHINVOICE = 'CASHINVOICE';
 }

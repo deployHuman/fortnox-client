@@ -8,19 +8,24 @@ use Exception;
 
 /**
  * Payload for Invoice
- * 
+ *
  * @documentation https://apps.fortnox.se/apidocs#operation/create_InvoicesResource
  */
 class EmailInformation
 {
     protected string $EmailAddressFrom;
+
     protected string $EmailAddressTo;
+
     protected string $EmailAddressCC;
+
     protected string $EmailAddressBCC;
+
     protected string $EmailSubject;
+
     protected string $EmailBody;
 
-    public function getEmailBody(): String
+    public function getEmailBody(): string
     {
         return $this->protectedstringEmailBody ?? '';
     }
@@ -31,11 +36,11 @@ class EmailInformation
             throw new Exception('EmailBody must be less than 20000 characters');
         }
         $this->protectedstringEmailBody = $protectedstringEmailBody;
+
         return $this;
     }
 
-
-    public function getEmailSubject(): String
+    public function getEmailSubject(): string
     {
         return $this->protectedstringEmailSubject ?? '';
     }
@@ -46,10 +51,11 @@ class EmailInformation
             throw new Exception('EmailSubject must be less than 100 characters');
         }
         $this->protectedstringEmailSubject = $protectedstringEmailSubject;
+
         return $this;
     }
 
-    public function getEmailAddressBCC(): String
+    public function getEmailAddressBCC(): string
     {
         return $this->protectedstringEmailAddressBCC ?? '';
     }
@@ -57,10 +63,11 @@ class EmailInformation
     public function setEmailAddressBCC(string $protectedstringEmailAddressBCC): self
     {
         $this->protectedstringEmailAddressBCC = $protectedstringEmailAddressBCC;
+
         return $this;
     }
 
-    public function getEmailAddressCC(): String
+    public function getEmailAddressCC(): string
     {
         return $this->protectedstringEmailAddressCC ?? '';
     }
@@ -68,10 +75,11 @@ class EmailInformation
     public function setEmailAddressCC(string $protectedstringEmailAddressCC): self
     {
         $this->protectedstringEmailAddressCC = $protectedstringEmailAddressCC;
+
         return $this;
     }
 
-    public function getEmailAddressTo(): String
+    public function getEmailAddressTo(): string
     {
         return $this->protectedstringEmailAddressTo ?? '';
     }
@@ -79,10 +87,11 @@ class EmailInformation
     public function setEmailAddressTo(string $protectedstringEmailAddressTo): self
     {
         $this->protectedstringEmailAddressTo = $protectedstringEmailAddressTo;
+
         return $this;
     }
 
-    public function getEmailAddressFrom(): String
+    public function getEmailAddressFrom(): string
     {
         return $this->protectedstringEmailAddressFrom ?? '';
     }
@@ -90,10 +99,9 @@ class EmailInformation
     public function setEmailAddressFrom(string $protectedstringEmailAddressFrom): self
     {
         $this->protectedstringEmailAddressFrom = $protectedstringEmailAddressFrom;
+
         return $this;
     }
-
-
 
     public function toArray(): array
     {

@@ -2,10 +2,9 @@
 
 namespace DeployHuman\fortnox\Enum;
 
-
 enum CustomerType: string
 {
-    case PRIVATE = "PRIVATE";
+    case PRIVATE = 'PRIVATE';
 
-    case COMPANY = "COMPANY";
+    case COMPANY = 'COMPANY';
 }

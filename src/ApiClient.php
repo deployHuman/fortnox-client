@@ -18,21 +18,21 @@ class ApiClient
 
     public function __construct(null|Configuration &$config = null)
     {
-        if (!isset($this->config)) {
+        if (! isset($this->config)) {
             $this->config = $config ?? new Configuration();
         }
 
         Registry::addLogger($this->config->getLogger(), __CLASS__, true);
 
         $this->client = new Client([
-            "base_uri" => $this->config->getBaseUrl(),
+            'base_uri' => $this->config->getBaseUrl(),
             'handler' => $this->config->getDebugHandler(),
             'user_agent' => $this->config->getUserAgent(),
             'http_errors' => false,
         ]);
-        if (get_parent_class($this) !== false) return;
-
-        $this->config->saveToStorage($this->config->getSettingsArray());
+        if (get_parent_class($this) !== false) {
+            return;
+        }
     }
 
     /**
@@ -48,24 +48,28 @@ class ApiClient
     /**
      * Send a request to the Fortnox API.
      *
-     * @param ApiMethod $method
-     * @param string    $uri
-     * @param array     $data
-     * @param array     $params
-     * 
+     * @param  ApiMethod  $method
+     * @param  string  $uri
+     * @param  array  $data
+     * @param  array  $params
      * @return Response
      */
     protected function request(ApiMethod $method = ApiMethod::GET, string $uri = '', array $data = [], array $params = []): Response
     {
-        if (!isset($this->config->getStorage()['access_token'])) {
-            $this->config->getLogger()->error("No access token found in storage.");
+        if (! isset($this->config->getStorage()['access_token'])) {
+            $this->config->getLogger()->error('No access token found in storage.');
+
             return new Response(401, [], '{"error":"Missing access token"}');
         }
 
         $optionsarray = [];
-        if (!empty($params)) $optionsarray[RequestOptions::QUERY] = $params;
-        if (!empty($data))  $optionsarray[RequestOptions::JSON] = $data;
-        $optionsarray[RequestOptions::HEADERS] = ['Authorization' => 'Bearer ' . $this->config->getStorage()['access_token']];
+        if (! empty($params)) {
+            $optionsarray[RequestOptions::QUERY] = $params;
+        }
+        if (! empty($data)) {
+            $optionsarray[RequestOptions::JSON] = $data;
+        }
+        $optionsarray[RequestOptions::HEADERS] = ['Authorization' => 'Bearer '.$this->config->getStorage()['access_token']];
 
         return $this->getClient()->request($method->value, $uri, $optionsarray);
     }
@@ -73,10 +77,9 @@ class ApiClient
     /**
      * Send a GET request to the Fortnox API.
      *
-     * @param string $uri
-     * @param array  $data
-     * @param array  $params
-     * 
+     * @param  string  $uri
+     * @param  array  $data
+     * @param  array  $params
      * @return Response
      */
     public function get(string $uri, array $data = [], array $params = []): Response
@@ -87,10 +90,9 @@ class ApiClient
     /**
      * Send a POST request to the Fortnox API.
      *
-     * @param string $uri
-     * @param array  $data
-     * @param array  $params
-     * 
+     * @param  string  $uri
+     * @param  array  $data
+     * @param  array  $params
      * @return Response
      */
     public function post(string $uri, array $data = [], array $params = []): Response
@@ -101,10 +103,9 @@ class ApiClient
     /**
      * Send a PUT request to the Fortnox API.
      *
-     * @param string $uri
-     * @param array  $data
-     * @param array  $params
-     * 
+     * @param  string  $uri
+     * @param  array  $data
+     * @param  array  $params
      * @return Response
      */
     public function put(string $uri, array $data = [], array $params = []): Response
@@ -115,10 +116,9 @@ class ApiClient
     /**
      * Send a DELETE request to the Fortnox API.
      *
-     * @param string $uri
-     * @param array  $data
-     * @param array  $params
-     * 
+     * @param  string  $uri
+     * @param  array  $data
+     * @param  array  $params
      * @return Response
      */
     public function delete(string $uri, array $data = [], array $params = []): Response
@@ -129,10 +129,9 @@ class ApiClient
     /**
      * Send a PATCH request to the Fortnox API.
      *
-     * @param string $uri
-     * @param array  $data
-     * @param array  $params
-     * 
+     * @param  string  $uri
+     * @param  array  $data
+     * @param  array  $params
      * @return Response
      */
     public function patch(string $uri, array $data = [], array $params = []): Response
@@ -143,10 +142,9 @@ class ApiClient
     /**
      * Send a OPTIONS request to the Fortnox API.
      *
-     * @param string $uri
-     * @param array  $data
-     * @param array  $params
-     * 
+     * @param  string  $uri
+     * @param  array  $data
+     * @param  array  $params
      * @return Response
      */
     public function options(string $uri, array $data = [], array $params = []): Response
@@ -156,16 +154,16 @@ class ApiClient
 
     /**
      * API - Authorizing your integration.
-     * 
-     * The authorization of access to a customers account is made using the 
-     * OAuth2 Authorization Code Flow. In essence, this means that a user 
+     *
+     * The authorization of access to a customers account is made using the
+     * OAuth2 Authorization Code Flow. In essence, this means that a user
      * grants your application access to their account.
-     * 
-     * The user must approve the access and scope of access to 
+     *
+     * The user must approve the access and scope of access to
      * their account during the activation process.
-     * 
+     *
      * @return Authentication
-     * 
+     *
      * @see https://developer.fortnox.se/general/authentication/
      */
     public function Authentication(): Authentication

@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace DeployHuman\fortnox\QueryBuilder;
 
-
 /**
  * For when the results are paginated.
  * Use this object as a param to select the page and the page size.
- * 
+ *
  * @example param new PaginationParams(2,200)
- * 
  */
 class PaginationParams
 {
     public int $page;
+
     public int $limit;
 
     public function __construct(int $page = 1, int $limit = 100)
@@ -26,12 +25,14 @@ class PaginationParams
     public function setPage(int $page): self
     {
         $this->page = $page;
+
         return $this;
     }
 
     public function setLimit(int $limit): self
     {
         $this->limit = $limit;
+
         return $this;
     }
 
@@ -45,21 +46,21 @@ class PaginationParams
         return $this->page;
     }
 
-    public function getLimitKey(): String
+    public function getLimitKey(): string
     {
-        return "limit";
+        return 'limit';
     }
 
-    public function getPageKey(): String
+    public function getPageKey(): string
     {
-        return "page";
+        return 'page';
     }
 
     public function toArray(): array
     {
         return [
             $this->getPageKey() => $this->page,
-            $this->getLimitKey() => $this->limit
+            $this->getLimitKey() => $this->limit,
         ];
     }
 

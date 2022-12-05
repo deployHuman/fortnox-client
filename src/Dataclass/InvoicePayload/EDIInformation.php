@@ -8,17 +8,21 @@ use Exception;
 
 /**
  * Payload for Invoice
- * 
+ *
  * @documentation https://apps.fortnox.se/apidocs#operation/create_InvoicesResource
  */
 class EDIInformation
 {
-
     protected string $EDIGlobalLocationNumber;
+
     protected string $EDIGlobalLocationNumberDelivery;
+
     protected string $EDIInvoiceExtra1;
+
     protected string $EDIInvoiceExtra2;
+
     protected string $EDIOurElectronicReference;
+
     protected string $EDIYourElectronicReference;
 
     public function setEDIGlobalLocationNumber(string $EDIGlobalLocationNumber): self
@@ -27,6 +31,7 @@ class EDIInformation
             throw new Exception('EDIGlobalLocationNumber must be less than 13 characters');
         }
         $this->EDIGlobalLocationNumber = $EDIGlobalLocationNumber;
+
         return $this;
     }
 
@@ -36,63 +41,67 @@ class EDIInformation
             throw new Exception('EDIGlobalLocationNumberDelivery must be less than 13 characters');
         }
         $this->EDIGlobalLocationNumberDelivery = $EDIGlobalLocationNumberDelivery;
+
         return $this;
     }
 
     public function setEDIInvoiceExtra1(string $EDIInvoiceExtra1): self
     {
         $this->EDIInvoiceExtra1 = $EDIInvoiceExtra1;
+
         return $this;
     }
 
     public function setEDIInvoiceExtra2(string $EDIInvoiceExtra2): self
     {
         $this->EDIInvoiceExtra2 = $EDIInvoiceExtra2;
+
         return $this;
     }
 
     public function setEDIOurElectronicReference(string $EDIOurElectronicReference): self
     {
         $this->EDIOurElectronicReference = $EDIOurElectronicReference;
+
         return $this;
     }
 
     public function setEDIYourElectronicReference(string $EDIYourElectronicReference): self
     {
         $this->EDIYourElectronicReference = $EDIYourElectronicReference;
+
         return $this;
     }
 
-    public function getEDIGlobalLocationNumber(): String
+    public function getEDIGlobalLocationNumber(): string
     {
         return $this->EDIGlobalLocationNumber ?? '';
     }
 
-    public function getEDIGlobalLocationNumberDelivery(): String
+    public function getEDIGlobalLocationNumberDelivery(): string
     {
         return $this->EDIGlobalLocationNumberDelivery ?? '';
     }
 
-    public function getEDIInvoiceExtra1(): String
+    public function getEDIInvoiceExtra1(): string
     {
         return $this->EDIInvoiceExtra1 ?? '';
     }
 
-    public function getEDIInvoiceExtra2(): String
+    public function getEDIInvoiceExtra2(): string
     {
         return $this->EDIInvoiceExtra2 ?? '';
     }
 
-    public function getEDIOurElectronicReference(): String
+    public function getEDIOurElectronicReference(): string
     {
         return $this->EDIOurElectronicReference ?? '';
     }
 
-    public function getEDIYourElectronicReference(): String
+    public function getEDIYourElectronicReference(): string
     {
         return $this->EDIYourElectronicReference ?? '';
     }
-
 
     public function toArray(): array
     {

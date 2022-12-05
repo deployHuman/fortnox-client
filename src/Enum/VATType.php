@@ -2,16 +2,15 @@
 
 namespace DeployHuman\fortnox\Enum;
 
-
 enum VATType: string
 {
-    case SEVAT = "SEVAT";
+    case SEVAT = 'SEVAT';
 
-    case SEREVERSEDVAT = "SEREVERSEDVAT";
+    case SEREVERSEDVAT = 'SEREVERSEDVAT';
 
-    case EUREVERSEDVAT = "EUREVERSEDVAT";
+    case EUREVERSEDVAT = 'EUREVERSEDVAT';
 
-    case EUVAT = "EUVAT";
+    case EUVAT = 'EUVAT';
 
-    case EXPORT = "EXPORT";
+    case EXPORT = 'EXPORT';
 }

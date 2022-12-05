@@ -2,10 +2,8 @@
 
 namespace DeployHuman\fortnox\Enum;
 
-
 enum InvoiceSortby: string
 {
-
     case CUSTOMERNAME = 'customername';
 
     case CUSTOMERNUMBER = 'customernumber';

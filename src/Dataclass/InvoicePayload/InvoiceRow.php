@@ -8,26 +8,41 @@ use Exception;
 
 /**
  * Payload for Invoice
- * 
+ *
  * @documentation https://apps.fortnox.se/apidocs#operation/create_InvoicesResource
  */
 class InvoiceRow
 {
     protected int $AccountNumber;
+
     protected string $ArticleNumber;
+
     protected string $CostCenter;
+
     protected string $DeliveredQuantity;
+
     protected string $Description;
+
     protected float $Discount;
+
     protected string $DiscountType;
+
     protected bool $HouseWork;
+
     protected int $HouseWorkHoursToReport;
+
     protected string $HouseWorkType;
+
     protected float $Price;
+
     protected string $Project;
+
     protected int $RowId;
+
     protected string $StockPointCode;
+
     protected string $Unit;
+
     protected int $VAT;
 
     public function setAccountNumber(int $AccountNumber): self
@@ -36,6 +51,7 @@ class InvoiceRow
             throw new Exception('AccountNumber must be between 1000 and 9999');
         }
         $this->AccountNumber = $AccountNumber;
+
         return $this;
     }
 
@@ -45,6 +61,7 @@ class InvoiceRow
             throw new Exception('ArticleNumber must be less than 20 characters');
         }
         $this->ArticleNumber = $ArticleNumber;
+
         return $this;
     }
 
@@ -54,6 +71,7 @@ class InvoiceRow
             throw new Exception('CostCenter must be less than 20 characters');
         }
         $this->CostCenter = $CostCenter;
+
         return $this;
     }
 
@@ -63,6 +81,7 @@ class InvoiceRow
             throw new Exception('DeliveredQuantity must be less than 20 characters');
         }
         $this->DeliveredQuantity = $DeliveredQuantity;
+
         return $this;
     }
 
@@ -72,12 +91,14 @@ class InvoiceRow
             throw new Exception('Description must be less than 200 characters');
         }
         $this->Description = $Description;
+
         return $this;
     }
 
     public function setDiscount(float $Discount): self
     {
         $this->Discount = $Discount;
+
         return $this;
     }
 
@@ -87,12 +108,14 @@ class InvoiceRow
             throw new Exception('DiscountType must be less than 20 characters');
         }
         $this->DiscountType = $DiscountType;
+
         return $this;
     }
 
     public function setHouseWork(bool $HouseWork): self
     {
         $this->HouseWork = $HouseWork;
+
         return $this;
     }
 
@@ -102,6 +125,7 @@ class InvoiceRow
             throw new Exception('HouseWorkHoursToReport must be less than 1000 characters');
         }
         $this->HouseWorkHoursToReport = $HouseWorkHoursToReport;
+
         return $this;
     }
 
@@ -111,12 +135,14 @@ class InvoiceRow
             throw new Exception('HouseWorkType must be less than 20 characters');
         }
         $this->HouseWorkType = $HouseWorkType;
+
         return $this;
     }
 
     public function setPrice(float $Price): self
     {
         $this->Price = $Price;
+
         return $this;
     }
 
@@ -126,12 +152,14 @@ class InvoiceRow
             throw new Exception('Project must be less than 20 characters');
         }
         $this->Project = $Project;
+
         return $this;
     }
 
     public function setRowId(int $RowId): self
     {
         $this->RowId = $RowId;
+
         return $this;
     }
 
@@ -141,6 +169,7 @@ class InvoiceRow
             throw new Exception('StockPointCode must be less than 20 characters');
         }
         $this->StockPointCode = $StockPointCode;
+
         return $this;
     }
 
@@ -150,12 +179,14 @@ class InvoiceRow
             throw new Exception('Unit must be less than 20 characters');
         }
         $this->Unit = $Unit;
+
         return $this;
     }
 
     public function setVAT(int $VAT): self
     {
         $this->VAT = $VAT;
+
         return $this;
     }
 
@@ -243,9 +274,12 @@ class InvoiceRow
     {
         $returnarray = [];
         foreach ($this as $key => $value) {
-            if ($value == null || $value == "") continue;
+            if ($value == null || $value == '') {
+                continue;
+            }
             $returnarray[ucfirst($key)] = $value;
         }
+
         return $returnarray;
     }
 

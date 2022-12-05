@@ -2,7 +2,6 @@
 
 namespace DeployHuman\fortnox\Enum;
 
-
 enum InvoiceFilter: string
 {
     case CANCELLED = 'cancelled';

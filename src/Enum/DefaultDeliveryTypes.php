@@ -2,12 +2,11 @@
 
 namespace DeployHuman\fortnox\Enum;
 
-
 enum DefaultDeliveryTypes: string
 {
-    case PRINT = "PRINT";
+    case PRINT = 'PRINT';
 
-    case EMAIL = "EMAIL";
+    case EMAIL = 'EMAIL';
 
-    case PRINTSERVICE = "PRINTSERVICE";
+    case PRINTSERVICE = 'PRINTSERVICE';
 }

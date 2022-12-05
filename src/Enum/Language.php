@@ -2,11 +2,9 @@
 
 namespace DeployHuman\fortnox\Enum;
 
-
 enum Language: string
 {
+    case SV = 'SV';
 
-    case SV = "SV";
-
-    case EN = "EN";
+    case EN = 'EN';
 }

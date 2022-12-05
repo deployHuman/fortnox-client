@@ -17,7 +17,6 @@ class Fortnox extends ApiClient
         return new CompanyInformation($this->config);
     }
 
-
     /**
      * Customers
      *

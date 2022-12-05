@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace DeployHuman\fortnox\Dataclass\Customer;
 
-
 /**
  * DefaultTemplates sub-class to Customer
- *  
+ *
  * @documentation https://apps.fortnox.se/apidocs#tag/CustomersResource
  */
 class DefaultTemplates
 {
-
     protected string $cashInvoice;
-    protected string $invoice;
-    protected string $offer;
-    protected string $order;
 
+    protected string $invoice;
+
+    protected string $offer;
+
+    protected string $order;
 
     public function __construct(array|self $preHydratedData = [])
     {
@@ -74,11 +74,11 @@ class DefaultTemplates
 
     /**
      * Hydrates the Object from an array or other Object of this type with keys matching the property names.
-     * 
+     *
      * Will not unset any properties that are not in the Source but present in the Object.
      * Will still trigger exceptions for invalid values.
-     * 
-     * @param array|self $SourceInfo
+     *
+     * @param  array|self  $SourceInfo
      * @return void
      */
     public function hydrate(array|self $SourceInfo)
@@ -88,9 +88,13 @@ class DefaultTemplates
         }
 
         foreach ($SourceInfo as $key => $value) {
-            if ($value == null) continue;
-            $method = 'set' . ucfirst($key);
-            if (!method_exists($this, $method)) continue;
+            if ($value == null) {
+                continue;
+            }
+            $method = 'set'.ucfirst($key);
+            if (! method_exists($this, $method)) {
+                continue;
+            }
             $this->$method($value);
         }
     }

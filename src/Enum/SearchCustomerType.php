@@ -2,10 +2,9 @@
 
 namespace DeployHuman\fortnox\Enum;
 
-
 enum SearchCustomerType: string
 {
-    case CUSTOMERNUMBER = "customernumber";
+    case CUSTOMERNUMBER = 'customernumber';
 
-    case ORGANISATIONNUMBER = "organisationnumber";
+    case ORGANISATIONNUMBER = 'organisationnumber';
 }
