@@ -43,6 +43,8 @@ class ApiClient
      */
     protected function getClient(): Client
     {
+        $this->config->throwErrorOnMissingAUth();
+
         return $this->client;
     }
 

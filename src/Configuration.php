@@ -306,15 +306,13 @@ class Configuration
         }
     }
 
-    public function isClientAuthSet(): bool
+    public function throwErrorOnMissingAUth()
     {
         if (empty($this->Client_id) || empty($this->Client_secret) || empty($this->BaseUrl) || empty($this->AppID)) {
-            $this->getLogger()->debug('Client Auth not set, please set Client_id, Client_secret, BaseUrl and  AppID');
+            $this->getLogger()->error('Client Auth not set, please set Client_id, Client_secret, BaseUrl and  AppID');
 
-            return false;
+            throw new \Exception('Client authentication is not set properly');
         }
-
-        return true;
     }
 
     public function setAllTokens(array $authBody): self
@@ -339,12 +337,6 @@ class Configuration
 
     public function resetAccesToken()
     {
-        $this->unsetFromStorage(['access_token', 'expires_at', 'scope', 'token_type', 'expires_in']);
-    }
-
-    public function resetAllTokens()
-    {
-        $this->resetAccesToken();
-        $this->unsetFromStorage(['refresh_token']);
+        $this->unsetFromStorage(['access_token', 'refresh_token', 'expires_at', 'scope', 'token_type', 'expires_in']);
     }
 }

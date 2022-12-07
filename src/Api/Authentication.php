@@ -25,7 +25,7 @@ class Authentication extends ApiClient
         if ($secretState == null) {
             $secretState = Helper::getRandomKey(10);
         }
-        $returnurl = $this->config->getBaseUrl().'/oauth-v1/auth?client_id='.$this->config->getClient_id().'&redirect_uri='.urlencode($redirect_uri).'&scope='.$scopedata->__toString().'&state='.$secretState.'&access_type=offline&response_type=code';
+        $returnurl = $this->config->getBaseUrl() . '/oauth-v1/auth?client_id=' . $this->config->getClient_id() . '&redirect_uri=' . urlencode($redirect_uri) . '&scope=' . $scopedata->__toString() . '&state=' . $secretState . '&access_type=offline&response_type=code';
 
         return $returnurl;
     }
@@ -38,12 +38,8 @@ class Authentication extends ApiClient
      * @return response
      * @documentation https://developer.fortnox.se/general/authentication/
      */
-    public function callAPIExchangeCodeForTokens(string $code): Response|false
+    public function callAPIExchangeCodeForTokens(string $code): Response
     {
-        if (! $this->config->isClientAuthSet()) {
-            return false;
-        }
-
         $client = $this->getClient();
         $response = $client->request(
             'POST',
@@ -60,7 +56,7 @@ class Authentication extends ApiClient
             ]
         );
         if ($response->getStatusCode() == 200) {
-            $this->config->getLogger()->debug(__CLASS__.'::'.__FUNCTION__.' - Got First Tokens');
+            $this->config->getLogger()->debug(__CLASS__ . '::' . __FUNCTION__ . ' - Got First Tokens');
             $this->config->setAllTokens(json_decode($response->getBody()->getContents(), true));
             $response->getBody()->rewind();
         }
@@ -76,18 +72,14 @@ class Authentication extends ApiClient
      * @return response
      * @documentation https://developer.fortnox.se/general/authentication/
      */
-    public function callAPIRefreshAccessToken(string $refresh_token = null): Response|false
+    public function callAPIRefreshAccessToken(string $refresh_token = null): Response
     {
-        if (! $this->config->isClientAuthSet()) {
-            return false;
-        }
         if ($refresh_token == null) {
             $refresh_token = $this->config->getRefresh_token();
         }
         if ($refresh_token == null) {
-            $this->config->getLogger()->error(__CLASS__.'::'.__FUNCTION__.' - No refresh token found.');
-
-            return false;
+            $this->config->getLogger()->error(__CLASS__ . '::' . __FUNCTION__ . ' - No refresh token found.');
+            throw new \Exception(__CLASS__ . '::' . __FUNCTION__ . ' - No refresh token found.');
         }
         $client = $this->getClient();
         $response = $client->request(
@@ -105,7 +97,7 @@ class Authentication extends ApiClient
             ]
         );
         if ($response->getStatusCode() == 200) {
-            $this->config->getLogger()->debug(__CLASS__.'::'.__FUNCTION__.' - Got refreshed tokens');
+            $this->config->getLogger()->debug(__CLASS__ . '::' . __FUNCTION__ . ' - Got refreshed tokens');
             $this->config->setAllTokens(json_decode($response->getBody()->getContents(), true));
             $response->getBody()->rewind();
         }
@@ -122,16 +114,13 @@ class Authentication extends ApiClient
      * @return response
      * @documentation https://developer.fortnox.se/general/authentication/
      */
-    public function callAPIRevokeRefreshtoken(string $refresh_token = null): Response|false
+    public function callAPIRevokeRefreshtoken(string $refresh_token = null): Response
     {
-        if (! $this->config->isClientAuthSet()) {
-            return false;
-        }
         if ($refresh_token == null) {
             $refresh_token = $this->config->getRefresh_token();
         }
         if ($refresh_token == null) {
-            $this->config->getLogger()->error(__CLASS__.'::'.__FUNCTION__.' - No refresh token found.');
+            $this->config->getLogger()->error(__CLASS__ . '::' . __FUNCTION__ . ' - No refresh token found.');
 
             return false;
         }
@@ -151,7 +140,7 @@ class Authentication extends ApiClient
             ]
         );
         if ($response->getStatusCode() == 200) {
-            $this->config->resetAllTokens();
+            $this->config->resetAccesToken();
         }
 
         return $response;
