@@ -59,20 +59,17 @@ class ApiClient
      */
     protected function request(ApiMethod $method = ApiMethod::GET, string $uri = '', array $data = [], array $params = []): Response
     {
-        if (! isset($this->config->getStorage()['access_token'])) {
+        if ($this->getAccessToken() ?? false) {
             $this->config->getLogger()->error('No access token found in storage.');
 
             return new Response(401, [], '{"error":"Missing access token"}');
         }
 
-        $optionsarray = [];
-        if (! empty($params)) {
-            $optionsarray[RequestOptions::QUERY] = $params;
-        }
-        if (! empty($data)) {
-            $optionsarray[RequestOptions::JSON] = $data;
-        }
-        $optionsarray[RequestOptions::HEADERS] = ['Authorization' => 'Bearer '.$this->getAccessToken()];
+        $optionsarray = array_filter([
+            RequestOptions::QUERY => $params ?: null,
+            RequestOptions::JSON => $data ?: null,
+            RequestOptions::HEADERS => ['Authorization' => 'Bearer '.$this->getAccessToken()],
+        ]);
 
         return $this->getClient()->request($method->value, $uri, $optionsarray);
     }
