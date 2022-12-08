@@ -220,7 +220,11 @@ class Configuration
     {
         $this->initateStorage();
         if ($this->getStorageIsSession()) {
-            $_SESSION[$this->storage_name] = array_merge($_SESSION[$this->storage_name], $asocArray);
+            if (function_exists('session')) {
+                session([$this->storage_name => array_merge(session($this->storage_name, []), $asocArray)]);
+            } else {
+                $_SESSION[$this->storage_name] = array_merge($_SESSION[$this->storage_name], $asocArray);
+            }
         } else {
             $this->storage[$this->storage_name] = array_merge($this->storage[$this->storage_name], $asocArray);
         }
